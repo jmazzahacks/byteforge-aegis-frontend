@@ -1,27 +1,128 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+@source "../components/**/*.tsx";
+@source "../app/**/*.tsx";
+@source "../lib/**/*.tsx";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Forge color palette */
+  --forge-black: #0a0a0b;
+  --forge-charcoal: #141416;
+  --forge-steel: #1e1e22;
+  --forge-iron: #2a2a30;
+  --forge-silver: #8a8a96;
+  --forge-light: #c8c8d0;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Molten accents */
+  --ember-dim: #8b4513;
+  --ember-glow: #d4740c;
+  --ember-bright: #f59e0b;
+  --ember-hot: #fbbf24;
+
+  /* Functional */
+  --success: #22c55e;
+  --error: #ef4444;
+
+  /* Fonts */
+  --font-display: 'Rajdhani', sans-serif;
+  --font-body: 'IBM Plex Sans', sans-serif;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  background-color: var(--forge-black);
+  color: var(--forge-light);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* Subtle noise texture overlay */
+.forge-texture::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* Ember glow effect */
+.ember-glow {
+  box-shadow:
+    0 0 20px rgba(212, 116, 12, 0.15),
+    0 0 40px rgba(212, 116, 12, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.ember-glow:hover {
+  box-shadow:
+    0 0 30px rgba(245, 158, 11, 0.25),
+    0 0 60px rgba(212, 116, 12, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Button ember effect */
+.btn-forge {
+  background: linear-gradient(135deg, var(--ember-glow) 0%, var(--ember-dim) 100%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-forge:hover {
+  background: linear-gradient(135deg, var(--ember-bright) 0%, var(--ember-glow) 100%);
+  transform: translateY(-1px);
+}
+
+.btn-forge:active {
+  transform: translateY(0);
+}
+
+/* Input focus glow */
+.input-forge {
+  transition: all 0.2s ease;
+  border: 1px solid var(--forge-iron);
+  background: var(--forge-charcoal);
+}
+
+.input-forge:focus {
+  border-color: var(--ember-glow);
+  box-shadow: 0 0 0 3px rgba(212, 116, 12, 0.15);
+  outline: none;
+}
+
+/* Geometric accent lines */
+.forge-accent-line {
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--ember-glow) 50%, transparent 100%);
+}
+
+/* Animated ember particles */
+@keyframes float-ember {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.6;
   }
+  50% {
+    transform: translateY(-8px) scale(1.1);
+    opacity: 1;
+  }
+}
+
+.ember-particle {
+  animation: float-ember 3s ease-in-out infinite;
+}
+
+/* Shield icon pulse */
+@keyframes shield-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(212, 116, 12, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.6));
+  }
+}
+
+.shield-glow {
+  animation: shield-pulse 3s ease-in-out infinite;
 }
