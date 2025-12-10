@@ -4,7 +4,6 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import AuthCard from '@/components/AuthCard';
 import StatusMessage from '@/components/StatusMessage';
-import { getCustomizationFromQuery } from '@/utils/customization';
 
 type VerificationStatus = 'loading' | 'success' | 'error';
 
@@ -12,8 +11,8 @@ function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<VerificationStatus>('loading');
   const [message, setMessage] = useState('Verifying your email...');
-
-  const customization = getCustomizationFromQuery(searchParams);
+  const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState(5);
 
   useEffect(() => {
     const verifyEmail = async () => {
@@ -36,12 +35,15 @@ function VerifyEmailContent() {
 
         if (response.ok) {
           setStatus('success');
-          setMessage('Email verified successfully! You can now log in to your account.');
+          setMessage('Email verified successfully!');
+          if (data.redirect_url) {
+            setRedirectUrl(data.redirect_url);
+          }
         } else {
           setStatus('error');
           setMessage(data.error || 'Failed to verify email. The link may be invalid or expired.');
         }
-      } catch (error: unknown) {
+      } catch {
         setStatus('error');
         setMessage('Failed to verify email. Please try again later.');
       }
@@ -50,18 +52,54 @@ function VerifyEmailContent() {
     verifyEmail();
   }, [searchParams]);
 
+  // Countdown and redirect effect
+  useEffect(() => {
+    if (status !== 'success' || !redirectUrl) return;
+
+    if (countdown <= 0) {
+      window.location.href = redirectUrl;
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setCountdown(countdown - 1);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [status, redirectUrl, countdown]);
+
   return (
-    <AuthCard customization={customization}>
+    <AuthCard>
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
-          Email Verification
+        <h2 className="text-2xl font-semibold mb-6 tracking-wide"
+            style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-light)' }}>
+          EMAIL VERIFICATION
         </h2>
         <StatusMessage type={status} message={message} />
 
-        {status === 'success' && (
+        {status === 'success' && redirectUrl && (
+          <div className="mt-6 space-y-4">
+            <p className="text-sm" style={{ color: 'var(--forge-silver)' }}>
+              Redirecting in <span style={{ color: 'var(--ember-glow)' }}>{countdown}</span> seconds...
+            </p>
+            <a
+              href={redirectUrl}
+              className="inline-block px-6 py-2 text-sm font-medium rounded-lg transition-all"
+              style={{
+                backgroundColor: 'var(--forge-steel)',
+                color: 'var(--forge-light)',
+                border: '1px solid var(--forge-iron)'
+              }}
+            >
+              Continue Now
+            </a>
+          </div>
+        )}
+
+        {status === 'error' && (
           <div className="mt-6">
-            <p className="text-sm text-gray-600">
-              You can close this window and return to the application.
+            <p className="text-sm" style={{ color: 'var(--forge-silver)' }}>
+              Please request a new verification email or contact support.
             </p>
           </div>
         )}
@@ -72,7 +110,20 @@ function VerifyEmailContent() {
 
 export default function VerifyEmailPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center"
+           style={{ backgroundColor: 'var(--forge-black)' }}>
+        <div className="inline-flex items-center gap-3">
+          <div className="w-2 h-2 rounded-full ember-particle"
+               style={{ backgroundColor: 'var(--ember-glow)' }} />
+          <p style={{ color: 'var(--forge-silver)', fontFamily: 'var(--font-body)' }}>
+            Loading...
+          </p>
+          <div className="w-2 h-2 rounded-full ember-particle"
+               style={{ backgroundColor: 'var(--ember-glow)', animationDelay: '1s' }} />
+        </div>
+      </div>
+    }>
       <VerifyEmailContent />
     </Suspense>
   );
