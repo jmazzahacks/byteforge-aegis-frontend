@@ -1,7 +1,9 @@
 'use client';
 
 import { Suspense, useEffect, useState, FormEvent } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
 import AuthCard from '@/components/AuthCard';
 import StatusMessage from '@/components/StatusMessage';
 import { browserClient, Site } from '@/lib/browserClient';
@@ -11,6 +13,8 @@ type LoginStatus = 'idle' | 'loading' | 'success' | 'error';
 function LoginContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const t = useTranslations('Login');
+  const tCommon = useTranslations('Common');
   const [site, setSite] = useState<Site | null>(null);
   const [siteError, setSiteError] = useState<string | null>(null);
   const [email, setEmail] = useState('');
@@ -22,7 +26,7 @@ function LoginContent() {
 
   useEffect(() => {
     if (!siteDomain) {
-      setSiteError('No site specified. Please use ?site=your-domain');
+      setSiteError(t('noSiteSpecified'));
       return;
     }
 
@@ -32,12 +36,12 @@ function LoginContent() {
       if (result.success && result.data) {
         setSite(result.data);
       } else {
-        setSiteError(result.error || 'Site not found');
+        setSiteError(result.error || t('siteNotFound'));
       }
     };
 
     fetchSite();
-  }, [siteDomain]);
+  }, [siteDomain, t]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -45,7 +49,7 @@ function LoginContent() {
     if (!site) return;
 
     setStatus('loading');
-    setMessage('Authenticating...');
+    setMessage(t('authenticating'));
 
     const result = await browserClient.login(site.id, email, password);
 
@@ -56,14 +60,14 @@ function LoginContent() {
       localStorage.setItem('site_name', site.name);
 
       setStatus('success');
-      setMessage('Access granted. Redirecting...');
+      setMessage(t('accessGranted'));
 
       setTimeout(() => {
         router.push('/admin');
       }, 500);
     } else {
       setStatus('error');
-      setMessage(result.error || 'Authentication failed');
+      setMessage(result.error || t('authenticationFailed'));
     }
   };
 
@@ -73,7 +77,7 @@ function LoginContent() {
         <div className="text-center">
           <h2 className="text-xl font-semibold mb-4"
               style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-light)' }}>
-            Access Denied
+            {t('accessDenied')}
           </h2>
           <StatusMessage type="error" message={siteError} />
         </div>
@@ -88,7 +92,7 @@ function LoginContent() {
           <div className="inline-flex items-center gap-3">
             <div className="w-2 h-2 rounded-full ember-particle"
                  style={{ backgroundColor: 'var(--ember-glow)' }} />
-            <p style={{ color: 'var(--forge-silver)' }}>Initializing secure connection...</p>
+            <p style={{ color: 'var(--forge-silver)' }}>{t('initializingConnection')}</p>
             <div className="w-2 h-2 rounded-full ember-particle"
                  style={{ backgroundColor: 'var(--ember-glow)', animationDelay: '1s' }} />
           </div>
@@ -102,7 +106,7 @@ function LoginContent() {
       <div>
         <h2 className="text-2xl font-semibold mb-1 text-center tracking-wide"
             style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-light)' }}>
-          ADMIN ACCESS
+          {t('title')}
         </h2>
         <p className="text-center text-sm mb-8" style={{ color: 'var(--ember-glow)' }}>
           {site.name}
@@ -119,7 +123,7 @@ function LoginContent() {
             <label htmlFor="email"
                    className="block text-xs font-medium uppercase tracking-wider mb-2"
                    style={{ color: 'var(--forge-silver)' }}>
-              Email Address
+              {t('emailLabel')}
             </label>
             <input
               id="email"
@@ -129,7 +133,7 @@ function LoginContent() {
               onChange={(e) => setEmail(e.target.value)}
               className="input-forge block w-full px-4 py-3 rounded-lg"
               style={{ color: 'var(--forge-light)' }}
-              placeholder="admin@example.com"
+              placeholder={t('emailPlaceholder')}
               disabled={status === 'loading' || status === 'success'}
             />
           </div>
@@ -138,7 +142,7 @@ function LoginContent() {
             <label htmlFor="password"
                    className="block text-xs font-medium uppercase tracking-wider mb-2"
                    style={{ color: 'var(--forge-silver)' }}>
-              Password
+              {t('passwordLabel')}
             </label>
             <input
               id="password"
@@ -148,7 +152,7 @@ function LoginContent() {
               onChange={(e) => setPassword(e.target.value)}
               className="input-forge block w-full px-4 py-3 rounded-lg"
               style={{ color: 'var(--forge-light)' }}
-              placeholder="Enter your password"
+              placeholder={t('passwordPlaceholder')}
               disabled={status === 'loading' || status === 'success'}
             />
           </div>
@@ -165,10 +169,10 @@ function LoginContent() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
-                Authenticating...
+                {t('authenticating')}
               </span>
             ) : (
-              'Authenticate'
+              t('authenticateButton')
             )}
           </button>
         </form>
@@ -186,6 +190,8 @@ function LoginContent() {
 }
 
 export default function LoginPage() {
+  const tCommon = useTranslations('Common');
+
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center"
@@ -194,7 +200,7 @@ export default function LoginPage() {
           <div className="w-2 h-2 rounded-full ember-particle"
                style={{ backgroundColor: 'var(--ember-glow)' }} />
           <p style={{ color: 'var(--forge-silver)', fontFamily: 'var(--font-body)' }}>
-            Loading...
+            {tCommon('loading')}
           </p>
           <div className="w-2 h-2 rounded-full ember-particle"
                style={{ backgroundColor: 'var(--ember-glow)', animationDelay: '1s' }} />

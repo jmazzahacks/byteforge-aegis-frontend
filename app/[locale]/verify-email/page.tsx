@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import AuthCard from '@/components/AuthCard';
 import StatusMessage from '@/components/StatusMessage';
 
@@ -9,8 +10,9 @@ type VerificationStatus = 'loading' | 'success' | 'error';
 
 function VerifyEmailContent() {
   const searchParams = useSearchParams();
+  const t = useTranslations('VerifyEmail');
   const [status, setStatus] = useState<VerificationStatus>('loading');
-  const [message, setMessage] = useState('Verifying your email...');
+  const [message, setMessage] = useState(t('verifying'));
   const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
   const [countdown, setCountdown] = useState(5);
 
@@ -20,7 +22,7 @@ function VerifyEmailContent() {
 
       if (!token) {
         setStatus('error');
-        setMessage('Invalid verification link. Missing token.');
+        setMessage(t('invalidLink'));
         return;
       }
 
@@ -35,22 +37,22 @@ function VerifyEmailContent() {
 
         if (response.ok) {
           setStatus('success');
-          setMessage('Email verified successfully!');
+          setMessage(t('success'));
           if (data.redirect_url) {
             setRedirectUrl(data.redirect_url);
           }
         } else {
           setStatus('error');
-          setMessage(data.error || 'Failed to verify email. The link may be invalid or expired.');
+          setMessage(data.error || t('failed'));
         }
       } catch {
         setStatus('error');
-        setMessage('Failed to verify email. Please try again later.');
+        setMessage(t('networkError'));
       }
     };
 
     verifyEmail();
-  }, [searchParams]);
+  }, [searchParams, t]);
 
   // Countdown and redirect effect
   useEffect(() => {
@@ -73,14 +75,14 @@ function VerifyEmailContent() {
       <div className="text-center">
         <h2 className="text-2xl font-semibold mb-6 tracking-wide"
             style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-light)' }}>
-          EMAIL VERIFICATION
+          {t('title')}
         </h2>
         <StatusMessage type={status} message={message} />
 
         {status === 'success' && redirectUrl && (
           <div className="mt-6 space-y-4">
             <p className="text-sm" style={{ color: 'var(--forge-silver)' }}>
-              Redirecting in <span style={{ color: 'var(--ember-glow)' }}>{countdown}</span> seconds...
+              {t('redirectingIn', { seconds: countdown })}
             </p>
             <a
               href={redirectUrl}
@@ -91,7 +93,7 @@ function VerifyEmailContent() {
                 border: '1px solid var(--forge-iron)'
               }}
             >
-              Continue Now
+              {t('continueNow')}
             </a>
           </div>
         )}
@@ -99,7 +101,7 @@ function VerifyEmailContent() {
         {status === 'error' && (
           <div className="mt-6">
             <p className="text-sm" style={{ color: 'var(--forge-silver)' }}>
-              Please request a new verification email or contact support.
+              {t('requestNewEmail')}
             </p>
           </div>
         )}
@@ -109,6 +111,8 @@ function VerifyEmailContent() {
 }
 
 export default function VerifyEmailPage() {
+  const tCommon = useTranslations('Common');
+
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center"
@@ -117,7 +121,7 @@ export default function VerifyEmailPage() {
           <div className="w-2 h-2 rounded-full ember-particle"
                style={{ backgroundColor: 'var(--ember-glow)' }} />
           <p style={{ color: 'var(--forge-silver)', fontFamily: 'var(--font-body)' }}>
-            Loading...
+            {tCommon('loading')}
           </p>
           <div className="w-2 h-2 rounded-full ember-particle"
                style={{ backgroundColor: 'var(--ember-glow)', animationDelay: '1s' }} />

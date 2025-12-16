@@ -1,0 +1,98 @@
+{
+  "Common": {
+    "loading": "Cargando...",
+    "logout": "Cerrar sesion",
+    "error": "Error",
+    "success": "Exito",
+    "brandName": "BYTEFORGE AEGIS",
+    "secureAuthentication": "Autenticacion Segura",
+    "protectedBy": "Protegido por ByteForge Aegis"
+  },
+  "Home": {
+    "title": "BYTEFORGE AEGIS",
+    "subtitle": "Servicio de Autenticacion Segura",
+    "description": "Infraestructura de autenticacion multi-inquilino para aplicaciones modernas."
+  },
+  "Login": {
+    "title": "ACCESO ADMINISTRATIVO",
+    "emailLabel": "Correo Electronico",
+    "emailPlaceholder": "admin@ejemplo.com",
+    "passwordLabel": "Contrasena",
+    "passwordPlaceholder": "Ingrese su contrasena",
+    "authenticateButton": "Autenticar",
+    "authenticating": "Autenticando...",
+    "accessGranted": "Acceso concedido. Redirigiendo...",
+    "authenticationFailed": "Autenticacion fallida",
+    "accessDenied": "Acceso Denegado",
+    "noSiteSpecified": "No se especifico sitio. Por favor use ?site=su-dominio",
+    "siteNotFound": "Sitio no encontrado",
+    "initializingConnection": "Inicializando conexion segura..."
+  },
+  "Admin": {
+    "title": "CONSOLA DE ADMINISTRACION",
+    "userManagement": "Gestion de Usuarios",
+    "registeredUsers": "Usuarios Registrados",
+    "total": "total",
+    "loadingDashboard": "Cargando panel seguro...",
+    "failedToLoadUsers": "Error al cargar usuarios",
+    "noUsersFound": "No se encontraron usuarios",
+    "tableHeaders": {
+      "email": "Correo Electronico",
+      "role": "Rol",
+      "status": "Estado",
+      "created": "Creado"
+    },
+    "roles": {
+      "admin": "admin",
+      "user": "usuario"
+    },
+    "userStatus": {
+      "verified": "Verificado",
+      "pending": "Pendiente"
+    }
+  },
+  "VerifyEmail": {
+    "title": "VERIFICACION DE CORREO",
+    "verifying": "Verificando su correo electronico...",
+    "success": "Correo verificado exitosamente!",
+    "invalidLink": "Enlace de verificacion invalido. Falta el token.",
+    "failed": "Error al verificar correo. El enlace puede ser invalido o estar expirado.",
+    "networkError": "Error al verificar correo. Por favor intente mas tarde.",
+    "redirectingIn": "Redirigiendo en {seconds} segundos...",
+    "continueNow": "Continuar Ahora",
+    "requestNewEmail": "Por favor solicite un nuevo correo de verificacion o contacte soporte."
+  },
+  "ResetPassword": {
+    "title": "Restablecer Contrasena",
+    "formTitle": "Restablecer Su Contrasena",
+    "newPasswordLabel": "Nueva Contrasena",
+    "newPasswordPlaceholder": "Ingrese nueva contrasena",
+    "confirmPasswordLabel": "Confirmar Contrasena",
+    "confirmPasswordPlaceholder": "Confirme nueva contrasena",
+    "resetButton": "Restablecer Contrasena",
+    "resetting": "Restableciendo...",
+    "invalidLink": "Enlace de restablecimiento invalido. Falta el token.",
+    "passwordsDoNotMatch": "Las contrasenas no coinciden.",
+    "passwordTooShort": "La contrasena debe tener al menos 8 caracteres.",
+    "resettingPassword": "Restableciendo su contrasena...",
+    "success": "Contrasena restablecida exitosamente! Ahora puede iniciar sesion con su nueva contrasena.",
+    "failed": "Error al restablecer contrasena. El enlace puede ser invalido o estar expirado.",
+    "networkError": "Error al restablecer contrasena. Por favor intente mas tarde.",
+    "successMessage": "Puede cerrar esta ventana y regresar a la aplicacion para iniciar sesion."
+  },
+  "ConfirmEmailChange": {
+    "title": "Confirmacion de Cambio de Correo",
+    "confirming": "Confirmando su cambio de correo...",
+    "success": "Direccion de correo actualizada exitosamente! Ahora puede usar su nuevo correo para iniciar sesion.",
+    "invalidLink": "Enlace de confirmacion invalido. Falta el token.",
+    "failed": "Error al confirmar cambio de correo. El enlace puede ser invalido o estar expirado.",
+    "networkError": "Error al confirmar cambio de correo. Por favor intente mas tarde.",
+    "successMessage": "Puede cerrar esta ventana y regresar a la aplicacion."
+  },
+  "LanguageSwitcher": {
+    "label": "Idioma",
+    "en": "Ingles",
+    "es": "Espanol",
+    "ru": "Ruso"
+  }
+}

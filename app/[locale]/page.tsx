@@ -1,4 +1,8 @@
-export default function Home() {
+import { getTranslations } from 'next-intl/server';
+
+export default async function Home() {
+  const t = await getTranslations('Home');
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden forge-texture"
          style={{ backgroundColor: 'var(--forge-black)' }}>
@@ -44,19 +48,19 @@ export default function Home() {
 
         <h1 className="text-5xl font-semibold tracking-wide mb-4"
             style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-light)' }}>
-          BYTEFORGE AEGIS
+          {t('title')}
         </h1>
 
         <div className="flex items-center justify-center gap-4 mb-8">
           <div className="w-12 h-px" style={{ backgroundColor: 'var(--ember-glow)', opacity: 0.6 }} />
           <p className="text-sm uppercase tracking-widest" style={{ color: 'var(--forge-silver)' }}>
-            Secure Authentication Service
+            {t('subtitle')}
           </p>
           <div className="w-12 h-px" style={{ backgroundColor: 'var(--ember-glow)', opacity: 0.6 }} />
         </div>
 
         <p className="text-lg mb-12 max-w-md mx-auto" style={{ color: 'var(--forge-silver)' }}>
-          Multi-tenant authentication infrastructure for modern applications.
+          {t('description')}
         </p>
 
         {/* Decorative element */}

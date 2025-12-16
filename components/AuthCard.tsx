@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { SiteCustomization } from '@/utils/customization';
 
 interface AuthCardProps {
@@ -7,6 +10,8 @@ interface AuthCardProps {
 }
 
 export default function AuthCard({ children, customization }: AuthCardProps) {
+  const t = useTranslations('Common');
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden forge-texture"
          style={{ backgroundColor: 'var(--forge-black)' }}>
@@ -61,13 +66,13 @@ export default function AuthCard({ children, customization }: AuthCardProps) {
 
           <h1 className="text-3xl font-semibold tracking-wide mb-2"
               style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-light)' }}>
-            {customization?.siteName || 'BYTEFORGE AEGIS'}
+            {customization?.siteName || t('brandName')}
           </h1>
 
           <div className="flex items-center justify-center gap-3 mb-1">
             <div className="w-8 h-px" style={{ backgroundColor: 'var(--ember-glow)', opacity: 0.6 }} />
             <p className="text-sm uppercase tracking-widest" style={{ color: 'var(--forge-silver)' }}>
-              Secure Authentication
+              {t('secureAuthentication')}
             </p>
             <div className="w-8 h-px" style={{ backgroundColor: 'var(--ember-glow)', opacity: 0.6 }} />
           </div>
@@ -90,7 +95,7 @@ export default function AuthCard({ children, customization }: AuthCardProps) {
           <div className="w-2 h-2 rounded-full ember-particle"
                style={{ backgroundColor: 'var(--ember-glow)', animationDelay: '0s' }} />
           <p className="text-xs uppercase tracking-wider" style={{ color: 'var(--forge-silver)' }}>
-            Protected by ByteForge Aegis
+            {t('protectedBy')}
           </p>
           <div className="w-2 h-2 rounded-full ember-particle"
                style={{ backgroundColor: 'var(--ember-glow)', animationDelay: '1.5s' }} />

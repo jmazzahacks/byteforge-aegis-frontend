@@ -1,0 +1,98 @@
+{
+  "Common": {
+    "loading": "Loading...",
+    "logout": "Logout",
+    "error": "Error",
+    "success": "Success",
+    "brandName": "BYTEFORGE AEGIS",
+    "secureAuthentication": "Secure Authentication",
+    "protectedBy": "Protected by ByteForge Aegis"
+  },
+  "Home": {
+    "title": "BYTEFORGE AEGIS",
+    "subtitle": "Secure Authentication Service",
+    "description": "Multi-tenant authentication infrastructure for modern applications."
+  },
+  "Login": {
+    "title": "ADMIN ACCESS",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "admin@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "authenticateButton": "Authenticate",
+    "authenticating": "Authenticating...",
+    "accessGranted": "Access granted. Redirecting...",
+    "authenticationFailed": "Authentication failed",
+    "accessDenied": "Access Denied",
+    "noSiteSpecified": "No site specified. Please use ?site=your-domain",
+    "siteNotFound": "Site not found",
+    "initializingConnection": "Initializing secure connection..."
+  },
+  "Admin": {
+    "title": "ADMIN CONSOLE",
+    "userManagement": "User Management",
+    "registeredUsers": "Registered Users",
+    "total": "total",
+    "loadingDashboard": "Loading secure dashboard...",
+    "failedToLoadUsers": "Failed to load users",
+    "noUsersFound": "No users found",
+    "tableHeaders": {
+      "email": "Email Address",
+      "role": "Role",
+      "status": "Status",
+      "created": "Created"
+    },
+    "roles": {
+      "admin": "admin",
+      "user": "user"
+    },
+    "userStatus": {
+      "verified": "Verified",
+      "pending": "Pending"
+    }
+  },
+  "VerifyEmail": {
+    "title": "EMAIL VERIFICATION",
+    "verifying": "Verifying your email...",
+    "success": "Email verified successfully!",
+    "invalidLink": "Invalid verification link. Missing token.",
+    "failed": "Failed to verify email. The link may be invalid or expired.",
+    "networkError": "Failed to verify email. Please try again later.",
+    "redirectingIn": "Redirecting in {seconds} seconds...",
+    "continueNow": "Continue Now",
+    "requestNewEmail": "Please request a new verification email or contact support."
+  },
+  "ResetPassword": {
+    "title": "Password Reset",
+    "formTitle": "Reset Your Password",
+    "newPasswordLabel": "New Password",
+    "newPasswordPlaceholder": "Enter new password",
+    "confirmPasswordLabel": "Confirm Password",
+    "confirmPasswordPlaceholder": "Confirm new password",
+    "resetButton": "Reset Password",
+    "resetting": "Resetting...",
+    "invalidLink": "Invalid reset link. Missing token.",
+    "passwordsDoNotMatch": "Passwords do not match.",
+    "passwordTooShort": "Password must be at least 8 characters long.",
+    "resettingPassword": "Resetting your password...",
+    "success": "Password reset successfully! You can now log in with your new password.",
+    "failed": "Failed to reset password. The link may be invalid or expired.",
+    "networkError": "Failed to reset password. Please try again later.",
+    "successMessage": "You can close this window and return to the application to log in."
+  },
+  "ConfirmEmailChange": {
+    "title": "Email Change Confirmation",
+    "confirming": "Confirming your email change...",
+    "success": "Email address updated successfully! You can now use your new email to log in.",
+    "invalidLink": "Invalid confirmation link. Missing token.",
+    "failed": "Failed to confirm email change. The link may be invalid or expired.",
+    "networkError": "Failed to confirm email change. Please try again later.",
+    "successMessage": "You can close this window and return to the application."
+  },
+  "LanguageSwitcher": {
+    "label": "Language",
+    "en": "English",
+    "es": "Spanish",
+    "ru": "Russian"
+  }
+}

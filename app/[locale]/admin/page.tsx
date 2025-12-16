@@ -1,11 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useTranslations, useLocale } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
 import { browserClient, User } from '@/lib/browserClient';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function AdminDashboard() {
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations('Admin');
+  const tCommon = useTranslations('Common');
   const [siteName, setSiteName] = useState<string | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,7 +38,7 @@ export default function AdminDashboard() {
     if (result.success && result.data) {
       setUsers(result.data);
     } else {
-      setError(result.error || 'Failed to load users');
+      setError(result.error || t('failedToLoadUsers'));
     }
 
     setIsLoading(false);
@@ -48,7 +53,7 @@ export default function AdminDashboard() {
   };
 
   function formatDate(timestamp: number): string {
-    return new Date(timestamp * 1000).toLocaleDateString('en-US', {
+    return new Date(timestamp * 1000).toLocaleDateString(locale, {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
@@ -63,7 +68,7 @@ export default function AdminDashboard() {
           <div className="w-2 h-2 rounded-full ember-particle"
                style={{ backgroundColor: 'var(--ember-glow)' }} />
           <p style={{ color: 'var(--forge-silver)', fontFamily: 'var(--font-body)' }}>
-            Loading secure dashboard...
+            {t('loadingDashboard')}
           </p>
           <div className="w-2 h-2 rounded-full ember-particle"
                style={{ backgroundColor: 'var(--ember-glow)', animationDelay: '1s' }} />
@@ -90,7 +95,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Navigation */}
-      <nav className="relative z-10 border-b" style={{
+      <nav className="relative z-20 border-b" style={{
         backgroundColor: 'rgba(20, 20, 22, 0.8)',
         borderColor: 'var(--forge-iron)',
         backdropFilter: 'blur(12px)'
@@ -108,25 +113,28 @@ export default function AdminDashboard() {
               <div>
                 <h1 className="text-lg font-semibold tracking-wide"
                     style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-light)' }}>
-                  {siteName || 'ADMIN CONSOLE'}
+                  {siteName || t('title')}
                 </h1>
                 <p className="text-xs uppercase tracking-widest" style={{ color: 'var(--ember-glow)' }}>
-                  User Management
+                  {t('userManagement')}
                 </p>
               </div>
             </div>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 text-sm uppercase tracking-wider rounded-lg transition-all duration-200 hover:bg-opacity-80"
-              style={{
-                fontFamily: 'var(--font-display)',
-                color: 'var(--forge-silver)',
-                backgroundColor: 'var(--forge-steel)',
-                border: '1px solid var(--forge-iron)'
-              }}
-            >
-              Logout
-            </button>
+            <div className="flex items-center gap-4">
+              <LanguageSwitcher />
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 text-sm uppercase tracking-wider rounded-lg transition-all duration-200 hover:bg-opacity-80"
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  color: 'var(--forge-silver)',
+                  backgroundColor: 'var(--forge-steel)',
+                  border: '1px solid var(--forge-iron)'
+                }}
+              >
+                {tCommon('logout')}
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -138,7 +146,7 @@ export default function AdminDashboard() {
           <div className="w-12 h-px" style={{ backgroundColor: 'var(--ember-glow)', opacity: 0.6 }} />
           <h2 className="text-2xl font-semibold tracking-wide uppercase"
               style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-light)' }}>
-            Registered Users
+            {t('registeredUsers')}
           </h2>
           <div className="flex-1 h-px" style={{ backgroundColor: 'var(--forge-iron)' }} />
           <span className="text-sm px-3 py-1 rounded-full"
@@ -147,7 +155,7 @@ export default function AdminDashboard() {
                   color: 'var(--ember-glow)',
                   border: '1px solid var(--forge-iron)'
                 }}>
-            {users.length} total
+            {users.length} {t('total')}
           </span>
         </div>
 
@@ -188,19 +196,19 @@ export default function AdminDashboard() {
               <tr style={{ backgroundColor: 'var(--forge-steel)' }}>
                 <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
                     style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
-                  Email Address
+                  {t('tableHeaders.email')}
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
                     style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
-                  Role
+                  {t('tableHeaders.role')}
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
                     style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
-                  Status
+                  {t('tableHeaders.status')}
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
                     style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
-                  Created
+                  {t('tableHeaders.created')}
                 </th>
               </tr>
             </thead>
@@ -230,7 +238,7 @@ export default function AdminDashboard() {
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                         </svg>
                       )}
-                      {user.role}
+                      {t(`roles.${user.role}`)}
                     </span>
                   </td>
                   <td className="px-6 py-4">
@@ -243,7 +251,7 @@ export default function AdminDashboard() {
                           }}>
                       <span className="w-1.5 h-1.5 rounded-full"
                             style={{ backgroundColor: user.is_verified ? 'var(--success)' : 'var(--ember-hot)' }} />
-                      {user.is_verified ? 'Verified' : 'Pending'}
+                      {user.is_verified ? t('userStatus.verified') : t('userStatus.pending')}
                     </span>
                   </td>
                   <td className="px-6 py-4">
@@ -260,7 +268,7 @@ export default function AdminDashboard() {
                       <svg className="w-12 h-12" style={{ color: 'var(--forge-iron)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                       </svg>
-                      <p style={{ color: 'var(--forge-silver)' }}>No users found</p>
+                      <p style={{ color: 'var(--forge-silver)' }}>{t('noUsersFound')}</p>
                     </div>
                   </td>
                 </tr>
