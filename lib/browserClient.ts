@@ -14,6 +14,16 @@ interface Site {
   updated_at: number;
 }
 
+interface User {
+  id: number;
+  site_id: number;
+  email: string;
+  is_verified: boolean;
+  role: 'user' | 'admin';
+  created_at: number;
+  updated_at: number;
+}
+
 interface LoginResponse {
   token: string;
   user_id: number;
@@ -104,6 +114,18 @@ export const browserClient = {
       body: JSON.stringify({ token }),
     });
   },
+
+  /**
+   * List users for the authenticated admin's site.
+   * Calls the Next.js API route which uses byteforge-aegis-client-js.
+   */
+  async adminListUsers(authToken: string): Promise<ApiResponse<User[]>> {
+    return request<User[]>('/api/admin/users', {
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+      },
+    });
+  },
 };
 
-export type { Site, LoginResponse, ApiResponse };
+export type { Site, User, LoginResponse, ApiResponse };
