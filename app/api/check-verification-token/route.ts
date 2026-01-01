@@ -4,7 +4,7 @@ import { getAuthClient } from '@/lib/authClient';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { token, password } = body;
+    const { token } = body;
 
     if (!token) {
       return NextResponse.json(
@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     }
 
     const client = getAuthClient();
-    const result = await client.verifyEmail(token, password);
+    const result = await client.checkVerificationToken(token);
 
     if (result.success) {
       return NextResponse.json(result.data);
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       );
     }
   } catch (error) {
-    console.error('Verify email error:', error);
+    console.error('Check verification token error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

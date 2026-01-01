@@ -60,7 +60,14 @@
     "networkError": "Error al verificar correo. Por favor intente mas tarde.",
     "redirectingIn": "Redirigiendo en {seconds} segundos...",
     "continueNow": "Continuar Ahora",
-    "requestNewEmail": "Por favor solicite un nuevo correo de verificacion o contacte soporte."
+    "requestNewEmail": "Por favor solicite un nuevo correo de verificacion o contacte soporte.",
+    "setPasswordTitle": "COMPLETAR CONFIGURACION DE CUENTA",
+    "setPasswordDescription": "Establezca su contrasena para {email}",
+    "password": "Contrasena",
+    "confirmPassword": "Confirmar Contrasena",
+    "passwordTooShort": "La contrasena debe tener al menos 8 caracteres.",
+    "passwordsDoNotMatch": "Las contrasenas no coinciden.",
+    "setPasswordButton": "Establecer Contrasena y Verificar"
   },
   "ResetPassword": {
     "title": "Restablecer Contrasena",

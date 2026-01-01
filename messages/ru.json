@@ -60,7 +60,14 @@
     "networkError": "Не удалось подтвердить почту. Попробуйте позже.",
     "redirectingIn": "Перенаправление через {seconds} секунд...",
     "continueNow": "Продолжить Сейчас",
-    "requestNewEmail": "Запросите новое письмо для подтверждения или обратитесь в поддержку."
+    "requestNewEmail": "Запросите новое письмо для подтверждения или обратитесь в поддержку.",
+    "setPasswordTitle": "ЗАВЕРШЕНИЕ НАСТРОЙКИ АККАУНТА",
+    "setPasswordDescription": "Установите пароль для {email}",
+    "password": "Пароль",
+    "confirmPassword": "Подтвердите Пароль",
+    "passwordTooShort": "Пароль должен содержать не менее 8 символов.",
+    "passwordsDoNotMatch": "Пароли не совпадают.",
+    "setPasswordButton": "Установить Пароль и Подтвердить"
   },
   "ResetPassword": {
     "title": "Сброс Пароля",

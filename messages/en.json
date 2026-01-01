@@ -60,7 +60,14 @@
     "networkError": "Failed to verify email. Please try again later.",
     "redirectingIn": "Redirecting in {seconds} seconds...",
     "continueNow": "Continue Now",
-    "requestNewEmail": "Please request a new verification email or contact support."
+    "requestNewEmail": "Please request a new verification email or contact support.",
+    "setPasswordTitle": "COMPLETE ACCOUNT SETUP",
+    "setPasswordDescription": "Set your password for {email}",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "passwordTooShort": "Password must be at least 8 characters.",
+    "passwordsDoNotMatch": "Passwords do not match.",
+    "setPasswordButton": "Set Password & Verify"
   },
   "ResetPassword": {
     "title": "Password Reset",
