@@ -60,9 +60,12 @@ npm start
 
 **URL**: `/verify-email`
 
+Handles email verification for both self-registered users and admin-created users:
+- **Self-registered users**: Auto-verifies (they already set their password during registration)
+- **Admin-created users**: Prompts for password setup, then verifies
+
 **Required Query Parameters**:
 - `token` - Verification token from email
-- `site_id` - Tenant site ID
 
 **Optional Query Parameters** (for customization):
 - `siteName` - Display name for the site
@@ -72,7 +75,7 @@ npm start
 
 **Example**:
 ```
-http://localhost:3000/verify-email?token=abc123&site_id=site_xyz&siteName=My%20App&logoUrl=https://example.com/logo.png
+http://localhost:3000/verify-email?token=abc123&siteName=My%20App&logoUrl=https://example.com/logo.png
 ```
 
 ### Password Reset
