@@ -12,6 +12,7 @@ interface Site {
   email_from_name: string;
   created_at: number;
   updated_at: number;
+  allow_self_registration: boolean;
 }
 
 interface User {
