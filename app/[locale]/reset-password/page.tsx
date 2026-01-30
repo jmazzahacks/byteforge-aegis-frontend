@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import AuthCard from '@/components/AuthCard';
 import StatusMessage from '@/components/StatusMessage';
 import { getCustomizationFromQuery } from '@/utils/customization';
+import { getClientSideAuthClient } from '@/lib/authClient';
 
 type ResetStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -46,22 +47,17 @@ function ResetPasswordContent() {
     setMessage(t('resettingPassword'));
 
     try {
-      const response = await fetch('/api/auth/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, new_password: password }),
-      });
+      const client = getClientSideAuthClient();
+      const result = await client.resetPassword(token!, password);
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (result.success) {
         setStatus('success');
         setMessage(t('success'));
         setPassword('');
         setConfirmPassword('');
       } else {
         setStatus('error');
-        setMessage(data.error || t('failed'));
+        setMessage(result.error || t('failed'));
       }
     } catch {
       setStatus('error');

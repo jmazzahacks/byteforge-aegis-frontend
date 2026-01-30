@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import AuthCard from '@/components/AuthCard';
 import StatusMessage from '@/components/StatusMessage';
 import { getCustomizationFromQuery } from '@/utils/customization';
+import { getClientSideAuthClient } from '@/lib/authClient';
 
 type ConfirmationStatus = 'loading' | 'success' | 'error';
 
@@ -28,20 +29,15 @@ function ConfirmEmailChangeContent() {
       }
 
       try {
-        const response = await fetch('/api/auth/confirm-email-change', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token }),
-        });
+        const client = getClientSideAuthClient();
+        const result = await client.confirmEmailChange(token);
 
-        const data = await response.json();
-
-        if (response.ok) {
+        if (result.success) {
           setStatus('success');
           setMessage(t('success'));
         } else {
           setStatus('error');
-          setMessage(data.error || t('failed'));
+          setMessage(result.error || t('failed'));
         }
       } catch {
         setStatus('error');

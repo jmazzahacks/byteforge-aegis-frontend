@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import AuthCard from '@/components/AuthCard';
 import StatusMessage from '@/components/StatusMessage';
+import { getClientSideAuthClient } from '@/lib/authClient';
 
 type PageStatus = 'loading' | 'password_required' | 'verifying' | 'success' | 'error';
 
@@ -32,17 +33,12 @@ function VerifyEmailContent() {
       }
 
       try {
-        const response = await fetch('/api/auth/check-verification-token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token }),
-        });
+        const client = getClientSideAuthClient();
+        const result = await client.checkVerificationToken(token);
 
-        const data = await response.json();
-
-        if (response.ok) {
-          setEmail(data.email);
-          if (data.password_required) {
+        if (result.success) {
+          setEmail(result.data.email);
+          if (result.data.password_required) {
             setStatus('password_required');
             setMessage('');
           } else {
@@ -51,7 +47,7 @@ function VerifyEmailContent() {
           }
         } else {
           setStatus('error');
-          setMessage(data.error || t('failed'));
+          setMessage(result.error || t('failed'));
         }
       } catch {
         setStatus('error');
@@ -67,23 +63,18 @@ function VerifyEmailContent() {
     setMessage(t('verifying'));
 
     try {
-      const response = await fetch('/api/auth/verify-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, password: userPassword }),
-      });
+      const client = getClientSideAuthClient();
+      const result = await client.verifyEmail(token!, userPassword);
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (result.success) {
         setStatus('success');
         setMessage(t('success'));
-        if (data.redirect_url) {
-          setRedirectUrl(data.redirect_url);
+        if (result.data.redirect_url) {
+          setRedirectUrl(result.data.redirect_url);
         }
       } else {
         setStatus('error');
-        setMessage(data.error || t('failed'));
+        setMessage(result.error || t('failed'));
       }
     } catch {
       setStatus('error');
