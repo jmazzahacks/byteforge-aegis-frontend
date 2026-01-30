@@ -28,7 +28,7 @@ function ConfirmEmailChangeContent() {
       }
 
       try {
-        const response = await fetch('/api/confirm-email-change', {
+        const response = await fetch('/api/auth/confirm-email-change', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token }),
