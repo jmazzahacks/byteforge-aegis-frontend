@@ -5,6 +5,10 @@ WORKDIR /app
 # Install git for GitHub dependencies
 RUN apk add --no-cache git
 
+# Configure git to use HTTPS instead of SSH (no SSH keys in Docker)
+RUN git config --global url."https://github.com/".insteadOf "git@github.com:" && \
+    git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
+
 # Copy package files
 COPY package.json package-lock.json ./
 
