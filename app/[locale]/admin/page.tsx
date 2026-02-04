@@ -35,7 +35,7 @@ export default function AdminDashboard() {
 
     const result = await browserClient.adminListUsers(token);
 
-    if (result.success && result.data) {
+    if (result.success) {
       setUsers(result.data);
     } else {
       setError(result.error || t('failedToLoadUsers'));
@@ -46,6 +46,7 @@ export default function AdminDashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('refresh_token');
     localStorage.removeItem('user_id');
     localStorage.removeItem('site_id');
     localStorage.removeItem('site_name');

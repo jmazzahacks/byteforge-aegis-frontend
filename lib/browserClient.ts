@@ -3,40 +3,12 @@
  * This keeps the backend URL hidden from the browser.
  */
 
-interface Site {
-  id: number;
-  name: string;
-  domain: string;
-  frontend_url: string;
-  email_from: string;
-  email_from_name: string;
-  created_at: number;
-  updated_at: number;
-  allow_self_registration: boolean;
-}
-
-interface User {
-  id: number;
-  site_id: number;
-  email: string;
-  is_verified: boolean;
-  role: 'user' | 'admin';
-  created_at: number;
-  updated_at: number;
-}
-
-interface LoginResponse {
-  token: string;
-  user_id: number;
-  expires_at: number;
-}
-
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-  statusCode?: number;
-}
+import type {
+  Site,
+  User,
+  LoginResponse,
+  ApiResponse,
+} from 'byteforge-aegis-client-js';
 
 async function request<T>(url: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
   try {

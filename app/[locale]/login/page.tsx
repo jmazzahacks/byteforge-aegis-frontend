@@ -33,7 +33,7 @@ function LoginContent() {
     const fetchSite = async () => {
       const result = await browserClient.getSiteByDomain(siteDomain);
 
-      if (result.success && result.data) {
+      if (result.success) {
         setSite(result.data);
       } else {
         setSiteError(result.error || t('siteNotFound'));
@@ -53,9 +53,10 @@ function LoginContent() {
 
     const result = await browserClient.login(site.id, email, password);
 
-    if (result.success && result.data) {
-      localStorage.setItem('auth_token', result.data.token);
-      localStorage.setItem('user_id', result.data.user_id.toString());
+    if (result.success) {
+      localStorage.setItem('auth_token', result.data.auth_token.token);
+      localStorage.setItem('refresh_token', result.data.refresh_token.token);
+      localStorage.setItem('user_id', result.data.auth_token.user_id.toString());
       localStorage.setItem('site_id', site.id.toString());
       localStorage.setItem('site_name', site.name);
 
