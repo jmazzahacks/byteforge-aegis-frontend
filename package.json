@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.17",
-    "byteforge-aegis-client-js": "github:jmazzahacks/byteforge-aegis-client-js",
+    "byteforge-aegis-client-js": "git+https://github.com/jmazzahacks/byteforge-aegis-client-js.git",
     "next": "^16.0.1",
     "next-intl": "^4.6.1",
     "react": "^19.2.3",
