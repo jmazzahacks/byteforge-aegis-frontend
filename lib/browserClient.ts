@@ -101,6 +101,18 @@ export const browserClient = {
   },
 
   /**
+   * List all configured sites (aegis super-admin only).
+   * Requires the caller's auth token for authorization.
+   */
+  async aegisAdminListSites(authToken: string): Promise<ApiResponse<Site[]>> {
+    return request<Site[]>('/api/aegis-admin/sites', {
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+      },
+    });
+  },
+
+  /**
    * Get the Aegis admin site info (resolved server-side from AEGIS_ADMIN_DOMAIN)
    */
   async aegisAdminGetSite(): Promise<ApiResponse<Site>> {

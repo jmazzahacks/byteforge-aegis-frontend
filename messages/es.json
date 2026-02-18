@@ -112,7 +112,19 @@
     "dashboardSubtitle": "Panel del Sistema",
     "welcome": "Bienvenido a la Administracion de Aegis",
     "welcomeDescription": "Las funciones de gestion de sitios estaran disponibles pronto.",
-    "loadingDashboard": "Cargando panel de administracion..."
+    "loadingDashboard": "Cargando panel de administracion...",
+    "siteManagement": "Gestion de Sitios",
+    "configuredSites": "Sitios Configurados",
+    "noSitesFound": "No se encontraron sitios",
+    "failedToLoadSites": "Error al cargar sitios",
+    "tableHeaders": {
+      "siteName": "Nombre del Sitio",
+      "domain": "Dominio",
+      "selfRegistration": "Auto-Registro",
+      "created": "Creado"
+    },
+    "enabled": "Habilitado",
+    "disabled": "Deshabilitado"
   },
   "LanguageSwitcher": {
     "label": "Idioma",

@@ -112,7 +112,19 @@
     "dashboardSubtitle": "System Dashboard",
     "welcome": "Welcome to Aegis Administration",
     "welcomeDescription": "Site management features coming soon.",
-    "loadingDashboard": "Loading administration panel..."
+    "loadingDashboard": "Loading administration panel...",
+    "siteManagement": "Site Management",
+    "configuredSites": "Configured Sites",
+    "noSitesFound": "No sites found",
+    "failedToLoadSites": "Failed to load sites",
+    "tableHeaders": {
+      "siteName": "Site Name",
+      "domain": "Domain",
+      "selfRegistration": "Self-Registration",
+      "created": "Created"
+    },
+    "enabled": "Enabled",
+    "disabled": "Disabled"
   },
   "LanguageSwitcher": {
     "label": "Language",

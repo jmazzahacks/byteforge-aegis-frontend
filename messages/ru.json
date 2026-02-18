@@ -112,7 +112,19 @@
     "dashboardSubtitle": "Панель Системы",
     "welcome": "Добро пожаловать в Администрирование Aegis",
     "welcomeDescription": "Функции управления сайтами скоро будут доступны.",
-    "loadingDashboard": "Загрузка панели администрирования..."
+    "loadingDashboard": "Загрузка панели администрирования...",
+    "siteManagement": "Управление Сайтами",
+    "configuredSites": "Настроенные Сайты",
+    "noSitesFound": "Сайты не найдены",
+    "failedToLoadSites": "Не удалось загрузить сайты",
+    "tableHeaders": {
+      "siteName": "Название Сайта",
+      "domain": "Домен",
+      "selfRegistration": "Саморегистрация",
+      "created": "Создан"
+    },
+    "enabled": "Включено",
+    "disabled": "Отключено"
   },
   "LanguageSwitcher": {
     "label": "Язык",
