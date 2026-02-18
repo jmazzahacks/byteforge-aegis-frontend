@@ -99,6 +99,23 @@ export const browserClient = {
       },
     });
   },
+
+  /**
+   * Get the Aegis admin site info (resolved server-side from AEGIS_ADMIN_DOMAIN)
+   */
+  async aegisAdminGetSite(): Promise<ApiResponse<Site>> {
+    return request<Site>('/api/aegis-admin/site');
+  },
+
+  /**
+   * Login to the Aegis admin interface (site_id resolved server-side)
+   */
+  async aegisAdminLogin(email: string, password: string): Promise<ApiResponse<LoginResponse>> {
+    return request<LoginResponse>('/api/aegis-admin/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
+  },
 };
 
 export type { Site, User, LoginResponse, ApiResponse };

@@ -96,6 +96,24 @@
     "networkError": "Error al confirmar cambio de correo. Por favor intente mas tarde.",
     "successMessage": "Puede cerrar esta ventana y regresar a la aplicacion."
   },
+  "AegisAdmin": {
+    "loginTitle": "ADMINISTRACION AEGIS",
+    "loginSubtitle": "Inicio de Sesion del Propietario",
+    "emailLabel": "Correo Electronico",
+    "emailPlaceholder": "admin@sudominio.com",
+    "passwordLabel": "Contrasena",
+    "passwordPlaceholder": "Ingrese su contrasena",
+    "loginButton": "Iniciar Sesion",
+    "authenticating": "Autenticando...",
+    "accessGranted": "Acceso concedido. Redirigiendo...",
+    "authenticationFailed": "Autenticacion fallida",
+    "configError": "La administracion de Aegis no esta configurada.",
+    "dashboardTitle": "ADMINISTRACION AEGIS",
+    "dashboardSubtitle": "Panel del Sistema",
+    "welcome": "Bienvenido a la Administracion de Aegis",
+    "welcomeDescription": "Las funciones de gestion de sitios estaran disponibles pronto.",
+    "loadingDashboard": "Cargando panel de administracion..."
+  },
   "LanguageSwitcher": {
     "label": "Idioma",
     "en": "Ingles",

@@ -96,6 +96,24 @@
     "networkError": "Failed to confirm email change. Please try again later.",
     "successMessage": "You can close this window and return to the application."
   },
+  "AegisAdmin": {
+    "loginTitle": "AEGIS ADMINISTRATION",
+    "loginSubtitle": "System Owner Login",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "admin@yourdomain.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "loginButton": "Sign In",
+    "authenticating": "Authenticating...",
+    "accessGranted": "Access granted. Redirecting...",
+    "authenticationFailed": "Authentication failed",
+    "configError": "Aegis administration is not configured.",
+    "dashboardTitle": "AEGIS ADMINISTRATION",
+    "dashboardSubtitle": "System Dashboard",
+    "welcome": "Welcome to Aegis Administration",
+    "welcomeDescription": "Site management features coming soon.",
+    "loadingDashboard": "Loading administration panel..."
+  },
   "LanguageSwitcher": {
     "label": "Language",
     "en": "English",

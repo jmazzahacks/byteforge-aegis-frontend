@@ -96,6 +96,24 @@
     "networkError": "Не удалось подтвердить смену почты. Попробуйте позже.",
     "successMessage": "Вы можете закрыть это окно и вернуться в приложение."
   },
+  "AegisAdmin": {
+    "loginTitle": "АДМИНИСТРИРОВАНИЕ AEGIS",
+    "loginSubtitle": "Вход Владельца Системы",
+    "emailLabel": "Электронная Почта",
+    "emailPlaceholder": "admin@вашдомен.com",
+    "passwordLabel": "Пароль",
+    "passwordPlaceholder": "Введите пароль",
+    "loginButton": "Войти",
+    "authenticating": "Аутентификация...",
+    "accessGranted": "Доступ разрешен. Перенаправление...",
+    "authenticationFailed": "Ошибка аутентификации",
+    "configError": "Администрирование Aegis не настроено.",
+    "dashboardTitle": "АДМИНИСТРИРОВАНИЕ AEGIS",
+    "dashboardSubtitle": "Панель Системы",
+    "welcome": "Добро пожаловать в Администрирование Aegis",
+    "welcomeDescription": "Функции управления сайтами скоро будут доступны.",
+    "loadingDashboard": "Загрузка панели администрирования..."
+  },
   "LanguageSwitcher": {
     "label": "Язык",
     "en": "Английский",
