@@ -124,7 +124,25 @@
       "created": "Creado"
     },
     "enabled": "Habilitado",
-    "disabled": "Deshabilitado"
+    "disabled": "Deshabilitado",
+    "userManagement": "Gestion de Usuarios",
+    "siteUsers": "Usuarios",
+    "backToDashboard": "Volver al Panel",
+    "noUsersFound": "No se encontraron usuarios",
+    "failedToLoadUsers": "Error al cargar usuarios",
+    "loadingUsers": "Cargando usuarios...",
+    "userTableHeaders": {
+      "email": "Correo Electronico",
+      "role": "Rol",
+      "status": "Estado",
+      "created": "Creado"
+    },
+    "roles": {
+      "admin": "admin",
+      "user": "usuario"
+    },
+    "verified": "Verificado",
+    "pending": "Pendiente"
   },
   "LanguageSwitcher": {
     "label": "Idioma",

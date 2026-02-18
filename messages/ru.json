@@ -124,7 +124,25 @@
       "created": "Создан"
     },
     "enabled": "Включено",
-    "disabled": "Отключено"
+    "disabled": "Отключено",
+    "userManagement": "Управление Пользователями",
+    "siteUsers": "Пользователи",
+    "backToDashboard": "Назад к Панели",
+    "noUsersFound": "Пользователи не найдены",
+    "failedToLoadUsers": "Не удалось загрузить пользователей",
+    "loadingUsers": "Загрузка пользователей...",
+    "userTableHeaders": {
+      "email": "Электронная Почта",
+      "role": "Роль",
+      "status": "Статус",
+      "created": "Создан"
+    },
+    "roles": {
+      "admin": "админ",
+      "user": "пользователь"
+    },
+    "verified": "Подтвержден",
+    "pending": "Ожидает"
   },
   "LanguageSwitcher": {
     "label": "Язык",

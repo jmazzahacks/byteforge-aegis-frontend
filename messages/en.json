@@ -124,7 +124,25 @@
       "created": "Created"
     },
     "enabled": "Enabled",
-    "disabled": "Disabled"
+    "disabled": "Disabled",
+    "userManagement": "User Management",
+    "siteUsers": "Users",
+    "backToDashboard": "Back to Dashboard",
+    "noUsersFound": "No users found",
+    "failedToLoadUsers": "Failed to load users",
+    "loadingUsers": "Loading users...",
+    "userTableHeaders": {
+      "email": "Email Address",
+      "role": "Role",
+      "status": "Status",
+      "created": "Created"
+    },
+    "roles": {
+      "admin": "admin",
+      "user": "user"
+    },
+    "verified": "Verified",
+    "pending": "Pending"
   },
   "LanguageSwitcher": {
     "label": "Language",

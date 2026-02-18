@@ -113,6 +113,18 @@ export const browserClient = {
   },
 
   /**
+   * List all users for a specific site (aegis super-admin only).
+   * Requires the caller's auth token for authorization.
+   */
+  async aegisAdminListUsersBySite(siteId: number, authToken: string): Promise<ApiResponse<User[]>> {
+    return request<User[]>(`/api/aegis-admin/sites/${siteId}/users`, {
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+      },
+    });
+  },
+
+  /**
    * Get the Aegis admin site info (resolved server-side from AEGIS_ADMIN_DOMAIN)
    */
   async aegisAdminGetSite(): Promise<ApiResponse<Site>> {

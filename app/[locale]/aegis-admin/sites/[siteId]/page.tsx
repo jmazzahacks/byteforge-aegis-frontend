@@ -3,17 +3,20 @@
 import { useEffect, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
+import { useParams } from 'next/navigation';
 import { browserClient } from '@/lib/browserClient';
-import type { Site } from 'byteforge-aegis-client-js';
+import type { User } from 'byteforge-aegis-client-js';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
-export default function AegisAdminDashboard() {
+export default function SiteUsersPage() {
   const router = useRouter();
   const locale = useLocale();
+  const params = useParams();
+  const siteId = Number(params.siteId);
   const t = useTranslations('AegisAdmin');
   const tCommon = useTranslations('Common');
   const [isLoading, setIsLoading] = useState(true);
-  const [sites, setSites] = useState<Site[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -24,19 +27,19 @@ export default function AegisAdminDashboard() {
       return;
     }
 
-    fetchSites(token);
-  }, [router]);
+    fetchUsers(token);
+  }, [router, siteId]);
 
-  async function fetchSites(token: string) {
+  async function fetchUsers(token: string) {
     setIsLoading(true);
     setError(null);
 
-    const result = await browserClient.aegisAdminListSites(token);
+    const result = await browserClient.aegisAdminListUsersBySite(siteId, token);
 
     if (result.success) {
-      setSites(result.data);
+      setUsers(result.data);
     } else {
-      setError(result.error || t('failedToLoadSites'));
+      setError(result.error || t('failedToLoadUsers'));
     }
 
     setIsLoading(false);
@@ -65,7 +68,7 @@ export default function AegisAdminDashboard() {
           <div className="w-2 h-2 rounded-full ember-particle"
                style={{ backgroundColor: 'var(--ember-glow)' }} />
           <p style={{ color: 'var(--forge-silver)', fontFamily: 'var(--font-body)' }}>
-            {t('loadingDashboard')}
+            {t('loadingUsers')}
           </p>
           <div className="w-2 h-2 rounded-full ember-particle"
                style={{ backgroundColor: 'var(--ember-glow)', animationDelay: '1s' }} />
@@ -113,7 +116,7 @@ export default function AegisAdminDashboard() {
                   {t('dashboardTitle')}
                 </h1>
                 <p className="text-xs uppercase tracking-widest" style={{ color: 'var(--ember-glow)' }}>
-                  {t('siteManagement')}
+                  {t('userManagement')}
                 </p>
               </div>
             </div>
@@ -138,12 +141,29 @@ export default function AegisAdminDashboard() {
 
       {/* Main content */}
       <main className="relative z-10 max-w-7xl mx-auto py-8 px-6 lg:px-8">
+        {/* Back button */}
+        <button
+          onClick={() => router.push('/aegis-admin/dashboard')}
+          className="inline-flex items-center gap-2 mb-6 text-sm uppercase tracking-wider transition-colors duration-200"
+          style={{
+            fontFamily: 'var(--font-display)',
+            color: 'var(--forge-silver)',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--ember-glow)'}
+          onMouseLeave={(e) => e.currentTarget.style.color = 'var(--forge-silver)'}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+          </svg>
+          {t('backToDashboard')}
+        </button>
+
         {/* Section header */}
         <div className="flex items-center gap-4 mb-8">
           <div className="w-12 h-px" style={{ backgroundColor: 'var(--ember-glow)', opacity: 0.6 }} />
           <h2 className="text-2xl font-semibold tracking-wide uppercase"
               style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-light)' }}>
-            {t('configuredSites')}
+            {t('siteUsers')}
           </h2>
           <div className="flex-1 h-px" style={{ backgroundColor: 'var(--forge-iron)' }} />
           <span className="text-sm px-3 py-1 rounded-full"
@@ -152,7 +172,7 @@ export default function AegisAdminDashboard() {
                   color: 'var(--ember-glow)',
                   border: '1px solid var(--forge-iron)'
                 }}>
-            {sites.length} total
+            {users.length} total
           </span>
         </div>
 
@@ -173,7 +193,7 @@ export default function AegisAdminDashboard() {
           </div>
         )}
 
-        {/* Sites table */}
+        {/* Users table */}
         <div className="rounded-xl overflow-hidden ember-glow"
              style={{
                backgroundColor: 'var(--forge-charcoal)',
@@ -193,72 +213,75 @@ export default function AegisAdminDashboard() {
               <tr style={{ backgroundColor: 'var(--forge-steel)' }}>
                 <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
                     style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
-                  {t('tableHeaders.siteName')}
+                  {t('userTableHeaders.email')}
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
                     style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
-                  {t('tableHeaders.domain')}
+                  {t('userTableHeaders.role')}
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
                     style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
-                  {t('tableHeaders.selfRegistration')}
+                  {t('userTableHeaders.status')}
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
                     style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
-                  {t('tableHeaders.created')}
+                  {t('userTableHeaders.created')}
                 </th>
               </tr>
             </thead>
             <tbody>
-              {sites.map((site, index) => (
-                <tr key={site.id}
-                    onClick={() => router.push(`/aegis-admin/sites/${site.id}`)}
-                    className="transition-colors duration-150 cursor-pointer hover:brightness-125"
+              {users.map((user, index) => (
+                <tr key={user.id}
+                    className="transition-colors duration-150"
                     style={{
                       borderTop: '1px solid var(--forge-iron)',
                       backgroundColor: index % 2 === 0 ? 'transparent' : 'rgba(30, 30, 34, 0.5)'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 107, 53, 0.08)'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = index % 2 === 0 ? 'transparent' : 'rgba(30, 30, 34, 0.5)'}>
+                    }}>
                   <td className="px-6 py-4">
                     <span className="text-sm font-medium" style={{ color: 'var(--forge-light)' }}>
-                      {site.name}
+                      {user.email}
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-sm" style={{ color: 'var(--forge-silver)' }}>
-                      {site.domain}
+                    <span className="inline-flex items-center px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full"
+                          style={{
+                            fontFamily: 'var(--font-display)',
+                            backgroundColor: user.role === 'admin' ? 'rgba(255, 107, 53, 0.15)' : 'var(--forge-steel)',
+                            color: user.role === 'admin' ? 'var(--ember-glow)' : 'var(--forge-silver)',
+                            border: `1px solid ${user.role === 'admin' ? 'rgba(255, 107, 53, 0.3)' : 'var(--forge-iron)'}`
+                          }}>
+                      {t(`roles.${user.role}`)}
                     </span>
                   </td>
                   <td className="px-6 py-4">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full"
                           style={{
                             fontFamily: 'var(--font-display)',
-                            backgroundColor: site.allow_self_registration ? 'rgba(34, 197, 94, 0.15)' : 'var(--forge-steel)',
-                            color: site.allow_self_registration ? 'var(--success)' : 'var(--forge-silver)',
-                            border: `1px solid ${site.allow_self_registration ? 'rgba(34, 197, 94, 0.3)' : 'var(--forge-iron)'}`
+                            backgroundColor: user.is_verified ? 'rgba(34, 197, 94, 0.15)' : 'var(--forge-steel)',
+                            color: user.is_verified ? 'var(--success)' : 'var(--forge-silver)',
+                            border: `1px solid ${user.is_verified ? 'rgba(34, 197, 94, 0.3)' : 'var(--forge-iron)'}`
                           }}>
                       <span className="w-1.5 h-1.5 rounded-full"
-                            style={{ backgroundColor: site.allow_self_registration ? 'var(--success)' : 'var(--forge-iron)' }} />
-                      {site.allow_self_registration ? t('enabled') : t('disabled')}
+                            style={{ backgroundColor: user.is_verified ? 'var(--success)' : 'var(--forge-iron)' }} />
+                      {user.is_verified ? t('verified') : t('pending')}
                     </span>
                   </td>
                   <td className="px-6 py-4">
                     <span className="text-sm" style={{ color: 'var(--forge-silver)' }}>
-                      {formatDate(site.created_at)}
+                      {formatDate(user.created_at)}
                     </span>
                   </td>
                 </tr>
               ))}
-              {sites.length === 0 && !error && (
+              {users.length === 0 && !error && (
                 <tr>
                   <td colSpan={4} className="px-6 py-12 text-center">
                     <div className="flex flex-col items-center gap-3">
                       <svg className="w-12 h-12" style={{ color: 'var(--forge-iron)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1}
-                              d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+                              d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128H5.228A2 2 0 015 19.128c0-1.113.285-2.16.786-3.07m0 0a9.38 9.38 0 014.002-3.974m0 0a9.38 9.38 0 014.002 3.974m-8.004 0A8.963 8.963 0 0112 15c1.657 0 3.222.449 4.558 1.228" />
                       </svg>
-                      <p style={{ color: 'var(--forge-silver)' }}>{t('noSitesFound')}</p>
+                      <p style={{ color: 'var(--forge-silver)' }}>{t('noUsersFound')}</p>
                     </div>
                   </td>
                 </tr>
