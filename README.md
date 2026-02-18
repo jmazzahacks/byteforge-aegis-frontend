@@ -190,33 +190,7 @@ confirm_url = f"{frontend_url}/confirm-email-change?token={token}&site_id={site_
 
 ## Deployment
 
-### Vercel (Recommended)
-
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel
-```
-
-### Docker
-
-```bash
-# Build
-docker build -t byteforge-aegis-frontend .
-
-# Run
-docker run -p 3000:3000 -e NEXT_PUBLIC_API_URL=https://api.yourdomain.com byteforge-aegis-frontend
-```
-
-### Other Platforms
-
-This is a standard Next.js application and can be deployed to:
-- Netlify
-- AWS Amplify
-- Google Cloud Run
-- Any Node.js hosting platform
+For full deployment instructions including Docker Compose, nginx reverse proxy configuration, and admin bootstrapping, see [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 ## Known Issues
 
