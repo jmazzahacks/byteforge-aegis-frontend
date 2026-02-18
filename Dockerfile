@@ -12,8 +12,8 @@ RUN git config --global url."https://github.com/".insteadOf "git@github.com:" &&
 # Copy package files
 COPY package.json package-lock.json ./
 
-# Install dependencies
-RUN npm ci
+# Install dependencies (--legacy-peer-deps avoids extraneous @swc/helpers lockfile sync failures)
+RUN npm ci --legacy-peer-deps
 
 # Stage 2: Builder
 FROM node:20-alpine AS builder
