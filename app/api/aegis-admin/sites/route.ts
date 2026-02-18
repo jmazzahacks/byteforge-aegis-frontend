@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AuthClient } from 'byteforge-aegis-client-js';
+import { logger } from '@/lib/logger';
 
 const API_URL = process.env.API_URL || 'http://localhost:5678';
 
@@ -27,6 +28,7 @@ export async function GET(request: NextRequest) {
     const result = await client.listSites();
 
     if (result.success) {
+      logger.info('Sites listed', { route: '/api/aegis-admin/sites' });
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
@@ -35,7 +37,7 @@ export async function GET(request: NextRequest) {
       );
     }
   } catch (error) {
-    console.error('Aegis admin list sites error:', error);
+    logger.error('Request failed', { route: '/api/aegis-admin/sites', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

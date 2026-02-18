@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthClient } from '@/lib/authClient';
+import { logger } from '@/lib/logger';
 
 export async function GET(request: NextRequest) {
   const domain = request.nextUrl.searchParams.get('domain');
@@ -16,6 +17,7 @@ export async function GET(request: NextRequest) {
     const result = await client.getSiteByDomain(domain);
 
     if (result.success) {
+      logger.info('Site lookup successful', { route: '/api/site', domain });
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
@@ -24,7 +26,7 @@ export async function GET(request: NextRequest) {
       );
     }
   } catch (error) {
-    console.error('Get site error:', error);
+    logger.error('Request failed', { route: '/api/site', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

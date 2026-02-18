@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthClient } from '@/lib/authClient';
+import { logger } from '@/lib/logger';
 
 export async function POST(request: NextRequest) {
   const adminDomain = process.env.AEGIS_ADMIN_DOMAIN;
@@ -39,6 +40,7 @@ export async function POST(request: NextRequest) {
     const loginResult = await client.login(email, password, siteId);
 
     if (loginResult.success) {
+      logger.info('Aegis admin login successful', { route: '/api/aegis-admin/login' });
       return NextResponse.json(loginResult.data);
     } else {
       return NextResponse.json(
@@ -47,7 +49,7 @@ export async function POST(request: NextRequest) {
       );
     }
   } catch (error) {
-    console.error('Aegis admin login error:', error);
+    logger.error('Request failed', { route: '/api/aegis-admin/login', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

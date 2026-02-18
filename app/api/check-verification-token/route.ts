@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthClient } from '@/lib/authClient';
+import { logger } from '@/lib/logger';
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,6 +18,7 @@ export async function POST(request: NextRequest) {
     const result = await client.checkVerificationToken(token);
 
     if (result.success) {
+      logger.info('Verification token valid', { route: '/api/check-verification-token' });
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
@@ -25,7 +27,7 @@ export async function POST(request: NextRequest) {
       );
     }
   } catch (error) {
-    console.error('Check verification token error:', error);
+    logger.error('Request failed', { route: '/api/check-verification-token', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

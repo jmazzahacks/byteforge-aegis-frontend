@@ -51,6 +51,8 @@ ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 # API_URL is passed at runtime via docker run -e API_URL=...
 ENV API_URL="http://localhost:5678"
+# Logging — override at runtime for Loki
+ENV DEBUG_LOCAL="false"
 
 # Health check - verifies frontend and backend connectivity
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \

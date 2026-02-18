@@ -13,6 +13,7 @@
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.17",
     "byteforge-aegis-client-js": "github:jmazzahacks/byteforge-aegis-client-js",
+    "byteforge-loki-logging-ts": "github:jmazzahacks/byteforge-loki-logging-ts",
     "next": "^16.0.1",
     "next-intl": "^4.6.1",
     "react": "^19.2.3",

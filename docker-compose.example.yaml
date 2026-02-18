@@ -7,6 +7,11 @@ services:
       - "3000:3000"
     environment:
       - API_URL=http://aegis-backend:5678
+      - DEBUG_LOCAL=false
+      # - LOKI_URL=https://loki.example.com
+      # - LOKI_USER=user
+      # - LOKI_PASS=pass
+      # - LOKI_CA_PATH=/path/to/ca.pem
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
       interval: 30s

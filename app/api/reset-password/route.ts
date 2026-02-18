@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthClient } from '@/lib/authClient';
+import { logger } from '@/lib/logger';
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,6 +18,7 @@ export async function POST(request: NextRequest) {
     const result = await client.resetPassword(token, new_password);
 
     if (result.success) {
+      logger.info('Password reset successful', { route: '/api/reset-password' });
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
@@ -25,7 +27,7 @@ export async function POST(request: NextRequest) {
       );
     }
   } catch (error) {
-    console.error('Reset password error:', error);
+    logger.error('Request failed', { route: '/api/reset-password', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

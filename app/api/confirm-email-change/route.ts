@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthClient } from '@/lib/authClient';
+import { logger } from '@/lib/logger';
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,6 +18,7 @@ export async function POST(request: NextRequest) {
     const result = await client.confirmEmailChange(token);
 
     if (result.success) {
+      logger.info('Email change confirmed', { route: '/api/confirm-email-change' });
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
@@ -25,7 +27,7 @@ export async function POST(request: NextRequest) {
       );
     }
   } catch (error) {
-    console.error('Confirm email change error:', error);
+    logger.error('Request failed', { route: '/api/confirm-email-change', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

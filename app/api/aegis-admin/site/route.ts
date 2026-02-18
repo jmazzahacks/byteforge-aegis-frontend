@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getAuthClient } from '@/lib/authClient';
+import { logger } from '@/lib/logger';
 
 export async function GET() {
   const adminDomain = process.env.AEGIS_ADMIN_DOMAIN;
@@ -16,6 +17,7 @@ export async function GET() {
     const result = await client.getSiteByDomain(adminDomain);
 
     if (result.success) {
+      logger.info('Aegis admin site lookup successful', { route: '/api/aegis-admin/site' });
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
@@ -24,7 +26,7 @@ export async function GET() {
       );
     }
   } catch (error) {
-    console.error('Aegis admin site lookup error:', error);
+    logger.error('Request failed', { route: '/api/aegis-admin/site', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
