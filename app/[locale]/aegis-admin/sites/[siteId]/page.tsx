@@ -213,6 +213,10 @@ export default function SiteUsersPage() {
               <tr style={{ backgroundColor: 'var(--forge-steel)' }}>
                 <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
                     style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
+                  ID
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+                    style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
                   {t('userTableHeaders.email')}
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
@@ -237,6 +241,11 @@ export default function SiteUsersPage() {
                       borderTop: '1px solid var(--forge-iron)',
                       backgroundColor: index % 2 === 0 ? 'transparent' : 'rgba(30, 30, 34, 0.5)'
                     }}>
+                  <td className="px-6 py-4">
+                    <span className="text-sm font-mono" style={{ color: 'var(--forge-silver)' }}>
+                      {user.id}
+                    </span>
+                  </td>
                   <td className="px-6 py-4">
                     <span className="text-sm font-medium" style={{ color: 'var(--forge-light)' }}>
                       {user.email}
@@ -275,7 +284,7 @@ export default function SiteUsersPage() {
               ))}
               {users.length === 0 && !error && (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center">
+                  <td colSpan={5} className="px-6 py-12 text-center">
                     <div className="flex flex-col items-center gap-3">
                       <svg className="w-12 h-12" style={{ color: 'var(--forge-iron)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1}
