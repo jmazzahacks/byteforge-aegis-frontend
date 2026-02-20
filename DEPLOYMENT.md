@@ -13,7 +13,7 @@ This guide covers deploying ByteForge Aegis with Docker and nginx reverse proxy.
               ┌────────────┼────────────┐
               │            │            │
               ▼            ▼            ▼
-     /api/aegis-admin/*   /api/*    everything else
+     /api/frontend/*      /api/*    everything else
               │            │            │
               ▼            ▼            ▼
      ┌────────────┐  ┌──────────┐  ┌────────────┐
@@ -23,7 +23,7 @@ This guide covers deploying ByteForge Aegis with Docker and nginx reverse proxy.
      └────────────┘  └──────────┘  └────────────┘
 ```
 
-The frontend handles all page rendering and the `/api/aegis-admin/*` routes (super-admin login/site lookup). The backend handles all other `/api/*` routes (authentication, site management, user management).
+The frontend handles all page rendering and the `/api/frontend/*` routes (site lookup, login proxy, admin dashboards). The backend handles all other `/api/*` routes (authentication, site management, user management).
 
 ## Docker Compose
 
@@ -56,7 +56,7 @@ services:
       - API_URL=http://aegis:5678
       - AEGIS_ADMIN_DOMAIN=aegis.yourdomain.com
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/api/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/api/frontend/health"]
       interval: 30s
       timeout: 3s
       start_period: 40s
@@ -88,7 +88,7 @@ services:
 
 ## Nginx Configuration
 
-The key routing requirement: `/api/aegis-admin/*` must go to the **frontend** container, while all other `/api/*` routes go to the **backend** container. Nginx matches the longest prefix first, so put the more specific block before the general one.
+The key routing requirement: `/api/frontend/*` must go to the **frontend** container, while all other `/api/*` routes go to the **backend** container. Nginx matches the longest prefix first, so put the more specific block before the general one.
 
 ```nginx
 server {
@@ -99,9 +99,9 @@ server {
     ssl_certificate     /path/to/cert.pem;
     ssl_certificate_key /path/to/key.pem;
 
-    # Aegis admin API routes -> frontend (Next.js)
+    # Frontend API routes -> frontend (Next.js)
     # MUST appear before the general /api/ block
-    location /api/aegis-admin/ {
+    location /api/frontend/ {
         proxy_pass http://127.0.0.1:3000;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -133,8 +133,7 @@ server {
 
 | Path | Destination | Purpose |
 |------|-------------|---------|
-| `/api/aegis-admin/site` | Frontend (3000) | Look up admin site info |
-| `/api/aegis-admin/login` | Frontend (3000) | Admin login proxy |
+| `/api/frontend/*` | Frontend (3000) | Site lookup, login proxy, admin dashboards |
 | `/api/*` | Backend (5678) | All auth/site/user API endpoints |
 | `/*` | Frontend (3000) | Pages, static assets |
 

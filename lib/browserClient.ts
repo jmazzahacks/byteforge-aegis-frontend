@@ -45,14 +45,14 @@ export const browserClient = {
    * Get site information by domain
    */
   async getSiteByDomain(domain: string): Promise<ApiResponse<Site>> {
-    return request<Site>(`/api/site?domain=${encodeURIComponent(domain)}`);
+    return request<Site>(`/api/frontend/site?domain=${encodeURIComponent(domain)}`);
   },
 
   /**
    * Login with email and password
    */
   async login(siteId: number, email: string, password: string): Promise<ApiResponse<LoginResponse>> {
-    return request<LoginResponse>('/api/login', {
+    return request<LoginResponse>('/api/frontend/login', {
       method: 'POST',
       body: JSON.stringify({ site_id: siteId, email, password }),
     });
@@ -62,7 +62,7 @@ export const browserClient = {
    * Verify email with token
    */
   async verifyEmail(token: string): Promise<ApiResponse<unknown>> {
-    return request('/api/verify-email', {
+    return request('/api/frontend/verify-email', {
       method: 'POST',
       body: JSON.stringify({ token }),
     });
@@ -72,7 +72,7 @@ export const browserClient = {
    * Reset password with token
    */
   async resetPassword(token: string, newPassword: string): Promise<ApiResponse<unknown>> {
-    return request('/api/reset-password', {
+    return request('/api/frontend/reset-password', {
       method: 'POST',
       body: JSON.stringify({ token, new_password: newPassword }),
     });
@@ -82,7 +82,7 @@ export const browserClient = {
    * Confirm email change with token
    */
   async confirmEmailChange(token: string): Promise<ApiResponse<unknown>> {
-    return request('/api/confirm-email-change', {
+    return request('/api/frontend/confirm-email-change', {
       method: 'POST',
       body: JSON.stringify({ token }),
     });
@@ -93,7 +93,7 @@ export const browserClient = {
    * Calls the Next.js API route which uses byteforge-aegis-client-js.
    */
   async adminListUsers(authToken: string): Promise<ApiResponse<User[]>> {
-    return request<User[]>('/api/admin/users', {
+    return request<User[]>('/api/frontend/admin/users', {
       headers: {
         'Authorization': `Bearer ${authToken}`,
       },
@@ -105,7 +105,7 @@ export const browserClient = {
    * Requires the caller's auth token for authorization.
    */
   async aegisAdminListSites(authToken: string): Promise<ApiResponse<Site[]>> {
-    return request<Site[]>('/api/aegis-admin/sites', {
+    return request<Site[]>('/api/frontend/aegis-admin/sites', {
       headers: {
         'Authorization': `Bearer ${authToken}`,
       },
@@ -117,7 +117,7 @@ export const browserClient = {
    * Uses the MASTER_API_KEY server-side to register users on any site.
    */
   async aegisAdminCreateUser(siteId: number, email: string, role: string, authToken: string): Promise<ApiResponse<User>> {
-    return request<User>(`/api/aegis-admin/sites/${siteId}/users`, {
+    return request<User>(`/api/frontend/aegis-admin/sites/${siteId}/users`, {
       method: 'POST',
       body: JSON.stringify({ email, role }),
       headers: {
@@ -131,7 +131,7 @@ export const browserClient = {
    * Uses the admin's Bearer token — site is derived from the token on the backend.
    */
   async adminCreateUser(email: string, role: string, authToken: string): Promise<ApiResponse<User>> {
-    return request<User>('/api/admin/users', {
+    return request<User>('/api/frontend/admin/users', {
       method: 'POST',
       body: JSON.stringify({ email, role }),
       headers: {
@@ -145,7 +145,7 @@ export const browserClient = {
    * Requires the caller's auth token for authorization.
    */
   async aegisAdminListUsersBySite(siteId: number, authToken: string): Promise<ApiResponse<User[]>> {
-    return request<User[]>(`/api/aegis-admin/sites/${siteId}/users`, {
+    return request<User[]>(`/api/frontend/aegis-admin/sites/${siteId}/users`, {
       headers: {
         'Authorization': `Bearer ${authToken}`,
       },
@@ -156,14 +156,14 @@ export const browserClient = {
    * Get the Aegis admin site info (resolved server-side from AEGIS_ADMIN_DOMAIN)
    */
   async aegisAdminGetSite(): Promise<ApiResponse<Site>> {
-    return request<Site>('/api/aegis-admin/site');
+    return request<Site>('/api/frontend/aegis-admin/site');
   },
 
   /**
    * Login to the Aegis admin interface (site_id resolved server-side)
    */
   async aegisAdminLogin(email: string, password: string): Promise<ApiResponse<LoginResponse>> {
-    return request<LoginResponse>('/api/aegis-admin/login', {
+    return request<LoginResponse>('/api/frontend/aegis-admin/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });

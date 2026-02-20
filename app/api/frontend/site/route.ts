@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const result = await client.getSiteByDomain(domain);
 
     if (result.success) {
-      logger.info('Site lookup successful', { route: '/api/site', domain });
+      logger.info('Site lookup successful', { route: '/api/frontend/site', domain });
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
       );
     }
   } catch (error) {
-    logger.error('Request failed', { route: '/api/site', error: String(error) });
+    logger.error('Request failed', { route: '/api/frontend/site', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

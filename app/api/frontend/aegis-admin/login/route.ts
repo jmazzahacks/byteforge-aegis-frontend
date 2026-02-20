@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     const loginResult = await client.login(email, password, siteId);
 
     if (loginResult.success) {
-      logger.info('Aegis admin login successful', { route: '/api/aegis-admin/login' });
+      logger.info('Aegis admin login successful', { route: '/api/frontend/aegis-admin/login' });
       return NextResponse.json(loginResult.data);
     } else {
       return NextResponse.json(
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       );
     }
   } catch (error) {
-    logger.error('Request failed', { route: '/api/aegis-admin/login', error: String(error) });
+    logger.error('Request failed', { route: '/api/frontend/aegis-admin/login', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

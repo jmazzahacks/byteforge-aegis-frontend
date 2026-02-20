@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     const result = await client.confirmEmailChange(token);
 
     if (result.success) {
-      logger.info('Email change confirmed', { route: '/api/confirm-email-change' });
+      logger.info('Email change confirmed', { route: '/api/frontend/confirm-email-change' });
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       );
     }
   } catch (error) {
-    logger.error('Request failed', { route: '/api/confirm-email-change', error: String(error) });
+    logger.error('Request failed', { route: '/api/frontend/confirm-email-change', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

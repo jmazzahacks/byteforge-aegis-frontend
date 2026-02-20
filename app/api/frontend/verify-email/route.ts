@@ -5,7 +5,7 @@ import { logger } from '@/lib/logger';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { token } = body;
+    const { token, password } = body;
 
     if (!token) {
       return NextResponse.json(
@@ -15,10 +15,10 @@ export async function POST(request: NextRequest) {
     }
 
     const client = getAuthClient();
-    const result = await client.checkVerificationToken(token);
+    const result = await client.verifyEmail(token, password);
 
     if (result.success) {
-      logger.info('Verification token valid', { route: '/api/check-verification-token' });
+      logger.info('Email verified', { route: '/api/frontend/verify-email' });
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       );
     }
   } catch (error) {
-    logger.error('Request failed', { route: '/api/check-verification-token', error: String(error) });
+    logger.error('Request failed', { route: '/api/frontend/verify-email', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -40,7 +40,7 @@ export async function GET(
     const result = await client.listUsersBySite(siteIdNum);
 
     if (result.success) {
-      logger.info('Site users listed', { route: '/api/aegis-admin/sites/[siteId]/users', siteId });
+      logger.info('Site users listed', { route: '/api/frontend/aegis-admin/sites/[siteId]/users', siteId });
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
@@ -49,7 +49,7 @@ export async function GET(
       );
     }
   } catch (error) {
-    logger.error('Request failed', { route: '/api/aegis-admin/sites/[siteId]/users', error: String(error) });
+    logger.error('Request failed', { route: '/api/frontend/aegis-admin/sites/[siteId]/users', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -104,7 +104,7 @@ export async function POST(
     const result = await client.registerAdmin(email, siteIdNum, userRole);
 
     if (result.success) {
-      logger.info('User created via aegis admin', { route: '/api/aegis-admin/sites/[siteId]/users', siteId, email });
+      logger.info('User created via aegis admin', { route: '/api/frontend/aegis-admin/sites/[siteId]/users', siteId, email });
       return NextResponse.json(result.data, { status: 201 });
     } else {
       return NextResponse.json(
@@ -113,7 +113,7 @@ export async function POST(
       );
     }
   } catch (error) {
-    logger.error('Create user failed', { route: '/api/aegis-admin/sites/[siteId]/users', error: String(error) });
+    logger.error('Create user failed', { route: '/api/frontend/aegis-admin/sites/[siteId]/users', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -17,7 +17,7 @@ export async function GET() {
     const result = await client.getSiteByDomain(adminDomain);
 
     if (result.success) {
-      logger.info('Aegis admin site lookup successful', { route: '/api/aegis-admin/site' });
+      logger.info('Aegis admin site lookup successful', { route: '/api/frontend/aegis-admin/site' });
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
@@ -26,7 +26,7 @@ export async function GET() {
       );
     }
   } catch (error) {
-    logger.error('Request failed', { route: '/api/aegis-admin/site', error: String(error) });
+    logger.error('Request failed', { route: '/api/frontend/aegis-admin/site', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

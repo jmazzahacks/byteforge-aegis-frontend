@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     const result = await client.listSites();
 
     if (result.success) {
-      logger.info('Sites listed', { route: '/api/aegis-admin/sites' });
+      logger.info('Sites listed', { route: '/api/frontend/aegis-admin/sites' });
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
       );
     }
   } catch (error) {
-    logger.error('Request failed', { route: '/api/aegis-admin/sites', error: String(error) });
+    logger.error('Request failed', { route: '/api/frontend/aegis-admin/sites', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

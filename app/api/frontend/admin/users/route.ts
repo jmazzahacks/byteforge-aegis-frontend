@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     const result = await client.adminListUsers();
 
     if (result.success) {
-      logger.info('Admin users listed', { route: '/api/admin/users' });
+      logger.info('Admin users listed', { route: '/api/frontend/admin/users' });
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
       );
     }
   } catch (error) {
-    logger.error('Request failed', { route: '/api/admin/users', error: String(error) });
+    logger.error('Request failed', { route: '/api/frontend/admin/users', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     const result = await client.adminRegisterUser(email, userRole);
 
     if (result.success) {
-      logger.info('User created via tenant admin', { route: '/api/admin/users', email });
+      logger.info('User created via tenant admin', { route: '/api/frontend/admin/users', email });
       return NextResponse.json(result.data, { status: 201 });
     } else {
       return NextResponse.json(
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
       );
     }
   } catch (error) {
-    logger.error('Create user failed', { route: '/api/admin/users', error: String(error) });
+    logger.error('Create user failed', { route: '/api/frontend/admin/users', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
