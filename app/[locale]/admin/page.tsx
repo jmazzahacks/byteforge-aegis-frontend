@@ -15,6 +15,12 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newEmail, setNewEmail] = useState('');
+  const [newRole, setNewRole] = useState('user');
+  const [isCreating, setIsCreating] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [createSuccess, setCreateSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('auth_token');
@@ -59,6 +65,30 @@ export default function AdminDashboard() {
       month: 'short',
       day: 'numeric'
     });
+  }
+
+  async function handleCreateUser(e: React.FormEvent) {
+    e.preventDefault();
+    const token = localStorage.getItem('auth_token');
+    if (!token) return;
+
+    setIsCreating(true);
+    setCreateError(null);
+    setCreateSuccess(null);
+
+    const result = await browserClient.adminCreateUser(newEmail, newRole, token);
+
+    if (result.success) {
+      setCreateSuccess(t('addUserSuccess'));
+      setNewEmail('');
+      setNewRole('user');
+      setShowAddForm(false);
+      fetchUsers(token);
+    } else {
+      setCreateError(result.error || t('addUserError'));
+    }
+
+    setIsCreating(false);
   }
 
   if (isLoading) {
@@ -158,7 +188,105 @@ export default function AdminDashboard() {
                 }}>
             {users.length} {t('total')}
           </span>
+          <button
+            onClick={() => { setShowAddForm(!showAddForm); setCreateError(null); setCreateSuccess(null); }}
+            className="px-4 py-2 text-xs uppercase tracking-wider rounded-lg transition-all duration-200"
+            style={{
+              fontFamily: 'var(--font-display)',
+              color: showAddForm ? 'var(--forge-black)' : 'var(--forge-light)',
+              backgroundColor: showAddForm ? 'var(--ember-glow)' : 'var(--forge-steel)',
+              border: `1px solid ${showAddForm ? 'var(--ember-glow)' : 'var(--forge-iron)'}`,
+            }}
+          >
+            {showAddForm ? t('addUserCancel') : t('addUser')}
+          </button>
         </div>
+
+        {/* Add User Form */}
+        {showAddForm && (
+          <form onSubmit={handleCreateUser} className="mb-6 p-6 rounded-xl"
+                style={{
+                  backgroundColor: 'var(--forge-charcoal)',
+                  border: '1px solid var(--forge-iron)',
+                }}>
+            <div className="flex flex-wrap items-end gap-4">
+              <div className="flex-1 min-w-[240px]">
+                <label className="block text-xs uppercase tracking-wider mb-2"
+                       style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
+                  {t('tableHeaders.email')}
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
+                  placeholder="user@example.com"
+                  className="w-full px-4 py-2.5 rounded-lg text-sm outline-none transition-colors duration-200"
+                  style={{
+                    backgroundColor: 'var(--forge-steel)',
+                    border: '1px solid var(--forge-iron)',
+                    color: 'var(--forge-light)',
+                    fontFamily: 'var(--font-body)',
+                  }}
+                />
+              </div>
+              <div className="w-40">
+                <label className="block text-xs uppercase tracking-wider mb-2"
+                       style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
+                  {t('roleLabel')}
+                </label>
+                <select
+                  value={newRole}
+                  onChange={(e) => setNewRole(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-lg text-sm outline-none"
+                  style={{
+                    backgroundColor: 'var(--forge-steel)',
+                    border: '1px solid var(--forge-iron)',
+                    color: 'var(--forge-light)',
+                    fontFamily: 'var(--font-body)',
+                  }}
+                >
+                  <option value="user">{t('roleUser')}</option>
+                  <option value="admin">{t('roleAdmin')}</option>
+                </select>
+              </div>
+              <button
+                type="submit"
+                disabled={isCreating}
+                className="px-6 py-2.5 text-xs uppercase tracking-wider rounded-lg transition-all duration-200"
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  color: 'var(--forge-black)',
+                  backgroundColor: isCreating ? 'var(--ember-dim)' : 'var(--ember-glow)',
+                  border: '1px solid var(--ember-glow)',
+                  opacity: isCreating ? 0.7 : 1,
+                }}
+              >
+                {isCreating ? t('creatingUser') : t('addUserSubmit')}
+              </button>
+            </div>
+            {createError && (
+              <p className="mt-3 text-sm" style={{ color: 'var(--error)' }}>{createError}</p>
+            )}
+          </form>
+        )}
+
+        {/* Success message */}
+        {createSuccess && (
+          <div className="mb-6 px-4 py-3 rounded-lg border"
+               style={{
+                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                 borderColor: 'var(--success)',
+                 color: 'var(--success)'
+               }}>
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {createSuccess}
+            </div>
+          </div>
+        )}
 
         {/* Error message */}
         {error && (

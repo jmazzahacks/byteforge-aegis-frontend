@@ -49,7 +49,16 @@
     "userStatus": {
       "verified": "Verificado",
       "pending": "Pendiente"
-    }
+    },
+    "addUser": "Agregar Usuario",
+    "addUserCancel": "Cancelar",
+    "addUserSubmit": "Crear Usuario",
+    "addUserSuccess": "Usuario creado. Se ha enviado un correo de verificacion.",
+    "addUserError": "Error al crear usuario",
+    "creatingUser": "Creando...",
+    "roleLabel": "Rol",
+    "roleUser": "Usuario",
+    "roleAdmin": "Admin"
   },
   "VerifyEmail": {
     "title": "VERIFICACION DE CORREO",
@@ -142,7 +151,16 @@
       "user": "usuario"
     },
     "verified": "Verificado",
-    "pending": "Pendiente"
+    "pending": "Pendiente",
+    "addUser": "Agregar Usuario",
+    "addUserCancel": "Cancelar",
+    "addUserSubmit": "Crear Usuario",
+    "addUserSuccess": "Usuario creado. Se ha enviado un correo de verificacion.",
+    "addUserError": "Error al crear usuario",
+    "creatingUser": "Creando...",
+    "roleLabel": "Rol",
+    "roleUser": "Usuario",
+    "roleAdmin": "Admin"
   },
   "LanguageSwitcher": {
     "label": "Idioma",

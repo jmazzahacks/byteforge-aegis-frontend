@@ -113,6 +113,34 @@ export const browserClient = {
   },
 
   /**
+   * Create a user for a specific site (aegis super-admin only).
+   * Uses the MASTER_API_KEY server-side to register users on any site.
+   */
+  async aegisAdminCreateUser(siteId: number, email: string, role: string, authToken: string): Promise<ApiResponse<User>> {
+    return request<User>(`/api/aegis-admin/sites/${siteId}/users`, {
+      method: 'POST',
+      body: JSON.stringify({ email, role }),
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+      },
+    });
+  },
+
+  /**
+   * Create a user for the tenant admin's own site.
+   * Uses the admin's Bearer token — site is derived from the token on the backend.
+   */
+  async adminCreateUser(email: string, role: string, authToken: string): Promise<ApiResponse<User>> {
+    return request<User>('/api/admin/users', {
+      method: 'POST',
+      body: JSON.stringify({ email, role }),
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+      },
+    });
+  },
+
+  /**
    * List all users for a specific site (aegis super-admin only).
    * Requires the caller's auth token for authorization.
    */

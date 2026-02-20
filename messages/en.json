@@ -49,7 +49,16 @@
     "userStatus": {
       "verified": "Verified",
       "pending": "Pending"
-    }
+    },
+    "addUser": "Add User",
+    "addUserCancel": "Cancel",
+    "addUserSubmit": "Create User",
+    "addUserSuccess": "User created. A verification email has been sent.",
+    "addUserError": "Failed to create user",
+    "creatingUser": "Creating...",
+    "roleLabel": "Role",
+    "roleUser": "User",
+    "roleAdmin": "Admin"
   },
   "VerifyEmail": {
     "title": "EMAIL VERIFICATION",
@@ -142,7 +151,16 @@
       "user": "user"
     },
     "verified": "Verified",
-    "pending": "Pending"
+    "pending": "Pending",
+    "addUser": "Add User",
+    "addUserCancel": "Cancel",
+    "addUserSubmit": "Create User",
+    "addUserSuccess": "User created. A verification email has been sent.",
+    "addUserError": "Failed to create user",
+    "creatingUser": "Creating...",
+    "roleLabel": "Role",
+    "roleUser": "User",
+    "roleAdmin": "Admin"
   },
   "LanguageSwitcher": {
     "label": "Language",

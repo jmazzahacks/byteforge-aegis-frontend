@@ -49,7 +49,16 @@
     "userStatus": {
       "verified": "Подтвержден",
       "pending": "Ожидает"
-    }
+    },
+    "addUser": "Добавить Пользователя",
+    "addUserCancel": "Отмена",
+    "addUserSubmit": "Создать Пользователя",
+    "addUserSuccess": "Пользователь создан. Письмо для подтверждения отправлено.",
+    "addUserError": "Не удалось создать пользователя",
+    "creatingUser": "Создание...",
+    "roleLabel": "Роль",
+    "roleUser": "Пользователь",
+    "roleAdmin": "Админ"
   },
   "VerifyEmail": {
     "title": "ПОДТВЕРЖДЕНИЕ ПОЧТЫ",
@@ -142,7 +151,16 @@
       "user": "пользователь"
     },
     "verified": "Подтвержден",
-    "pending": "Ожидает"
+    "pending": "Ожидает",
+    "addUser": "Добавить Пользователя",
+    "addUserCancel": "Отмена",
+    "addUserSubmit": "Создать Пользователя",
+    "addUserSuccess": "Пользователь создан. Письмо для подтверждения отправлено.",
+    "addUserError": "Не удалось создать пользователя",
+    "creatingUser": "Создание...",
+    "roleLabel": "Роль",
+    "roleUser": "Пользователь",
+    "roleAdmin": "Админ"
   },
   "LanguageSwitcher": {
     "label": "Язык",
