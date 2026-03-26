@@ -160,7 +160,30 @@
     "creatingUser": "Creating...",
     "roleLabel": "Role",
     "roleUser": "User",
-    "roleAdmin": "Admin"
+    "roleAdmin": "Admin",
+    "createSite": "Create Site",
+    "createSiteSubmit": "Create Site",
+    "creatingSite": "Creating...",
+    "createSiteSuccess": "Site created successfully.",
+    "createSiteError": "Failed to create site",
+    "editSite": "Edit Site",
+    "siteSettings": "Settings",
+    "saveSiteSettings": "Save Changes",
+    "savingSiteSettings": "Saving...",
+    "saveSiteSuccess": "Site settings saved.",
+    "saveSiteError": "Failed to save settings",
+    "loadingSiteSettings": "Loading site settings...",
+    "backToSite": "Back to Site",
+    "siteFormLabels": {
+      "name": "Site Name",
+      "domain": "Domain",
+      "frontendUrl": "Frontend URL",
+      "emailFrom": "Email From Address",
+      "emailFromName": "Email From Name",
+      "verificationRedirectUrl": "Verification Redirect URL (optional)",
+      "allowSelfRegistration": "Allow Self-Registration",
+      "webhookUrl": "Webhook URL (optional)"
+    }
   },
   "LanguageSwitcher": {
     "label": "Language",

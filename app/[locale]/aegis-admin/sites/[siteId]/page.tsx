@@ -205,6 +205,20 @@ export default function SiteUsersPage() {
             {users.length} total
           </span>
           <button
+            onClick={() => router.push(`/aegis-admin/sites/${siteId}/settings`)}
+            className="px-4 py-2 text-xs uppercase tracking-wider rounded-lg transition-all duration-200"
+            style={{
+              fontFamily: 'var(--font-display)',
+              color: 'var(--forge-light)',
+              backgroundColor: 'var(--forge-steel)',
+              border: '1px solid var(--forge-iron)',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--ember-glow)'; e.currentTarget.style.color = 'var(--ember-glow)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--forge-iron)'; e.currentTarget.style.color = 'var(--forge-light)'; }}
+          >
+            {t('siteSettings')}
+          </button>
+          <button
             onClick={() => { setShowAddForm(!showAddForm); setCreateError(null); setCreateSuccess(null); }}
             className="px-4 py-2 text-xs uppercase tracking-wider rounded-lg transition-all duration-200"
             style={{

@@ -160,7 +160,30 @@
     "creatingUser": "Создание...",
     "roleLabel": "Роль",
     "roleUser": "Пользователь",
-    "roleAdmin": "Админ"
+    "roleAdmin": "Админ",
+    "createSite": "Создать Сайт",
+    "createSiteSubmit": "Создать Сайт",
+    "creatingSite": "Создание...",
+    "createSiteSuccess": "Сайт успешно создан.",
+    "createSiteError": "Не удалось создать сайт",
+    "editSite": "Редактировать Сайт",
+    "siteSettings": "Настройки",
+    "saveSiteSettings": "Сохранить Изменения",
+    "savingSiteSettings": "Сохранение...",
+    "saveSiteSuccess": "Настройки сайта сохранены.",
+    "saveSiteError": "Не удалось сохранить настройки",
+    "loadingSiteSettings": "Загрузка настроек сайта...",
+    "backToSite": "Назад к Сайту",
+    "siteFormLabels": {
+      "name": "Название Сайта",
+      "domain": "Домен",
+      "frontendUrl": "URL Фронтенда",
+      "emailFrom": "Адрес Отправителя",
+      "emailFromName": "Имя Отправителя",
+      "verificationRedirectUrl": "URL Перенаправления Верификации (необязательно)",
+      "allowSelfRegistration": "Разрешить Самостоятельную Регистрацию",
+      "webhookUrl": "URL Вебхука (необязательно)"
+    }
   },
   "LanguageSwitcher": {
     "label": "Язык",

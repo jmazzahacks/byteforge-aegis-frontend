@@ -8,6 +8,8 @@ import type {
   User,
   LoginResponse,
   ApiResponse,
+  CreateSiteRequest,
+  UpdateSiteRequest,
 } from 'byteforge-aegis-client-js';
 
 async function request<T>(url: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
@@ -168,6 +170,43 @@ export const browserClient = {
       body: JSON.stringify({ email, password }),
     });
   },
+
+  /**
+   * Create a new site (aegis super-admin only).
+   */
+  async aegisAdminCreateSite(siteData: CreateSiteRequest, authToken: string): Promise<ApiResponse<Site>> {
+    return request<Site>('/api/frontend/aegis-admin/sites', {
+      method: 'POST',
+      body: JSON.stringify(siteData),
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+      },
+    });
+  },
+
+  /**
+   * Get a site by ID (aegis super-admin only).
+   */
+  async aegisAdminGetSiteById(siteId: number, authToken: string): Promise<ApiResponse<Site>> {
+    return request<Site>(`/api/frontend/aegis-admin/sites/${siteId}`, {
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+      },
+    });
+  },
+
+  /**
+   * Update a site (aegis super-admin only).
+   */
+  async aegisAdminUpdateSite(siteId: number, updates: UpdateSiteRequest, authToken: string): Promise<ApiResponse<Site>> {
+    return request<Site>(`/api/frontend/aegis-admin/sites/${siteId}`, {
+      method: 'PUT',
+      body: JSON.stringify(updates),
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+      },
+    });
+  },
 };
 
-export type { Site, User, LoginResponse, ApiResponse };
+export type { Site, User, LoginResponse, ApiResponse, CreateSiteRequest, UpdateSiteRequest };

@@ -154,6 +154,20 @@ export default function AegisAdminDashboard() {
                 }}>
             {sites.length} total
           </span>
+          <button
+            onClick={() => router.push('/aegis-admin/sites/new')}
+            className="ml-2 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider rounded-lg transition-all duration-200"
+            style={{
+              fontFamily: 'var(--font-display)',
+              backgroundColor: 'var(--ember-glow)',
+              color: 'var(--forge-black)',
+              border: '1px solid var(--ember-glow)',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--ember-bright)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'var(--ember-glow)'; }}
+          >
+            + {t('createSite')}
+          </button>
         </div>
 
         {/* Error message */}
