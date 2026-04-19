@@ -207,6 +207,18 @@ export const browserClient = {
       },
     });
   },
+
+  /**
+   * Resend verification email for an unverified user (aegis super-admin only).
+   */
+  async aegisAdminResendVerification(userId: number, authToken: string): Promise<ApiResponse<{ message: string }>> {
+    return request<{ message: string }>(`/api/frontend/aegis-admin/users/${userId}/resend-verification`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+      },
+    });
+  },
 };
 
 export type { Site, User, LoginResponse, ApiResponse, CreateSiteRequest, UpdateSiteRequest };

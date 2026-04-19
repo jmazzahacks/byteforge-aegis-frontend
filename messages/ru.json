@@ -144,7 +144,8 @@
       "email": "Электронная Почта",
       "role": "Роль",
       "status": "Статус",
-      "created": "Создан"
+      "created": "Создан",
+      "actions": "Действия"
     },
     "roles": {
       "admin": "админ",
@@ -152,6 +153,10 @@
     },
     "verified": "Подтвержден",
     "pending": "Ожидает",
+    "resendVerification": "Отправить снова",
+    "resendingVerification": "Отправка...",
+    "resendVerificationSuccess": "Письмо с подтверждением отправлено.",
+    "resendVerificationError": "Не удалось отправить письмо с подтверждением.",
     "addUser": "Добавить Пользователя",
     "addUserCancel": "Отмена",
     "addUserSubmit": "Создать Пользователя",

@@ -144,7 +144,8 @@
       "email": "Correo Electronico",
       "role": "Rol",
       "status": "Estado",
-      "created": "Creado"
+      "created": "Creado",
+      "actions": "Acciones"
     },
     "roles": {
       "admin": "admin",
@@ -152,6 +153,10 @@
     },
     "verified": "Verificado",
     "pending": "Pendiente",
+    "resendVerification": "Reenviar",
+    "resendingVerification": "Enviando...",
+    "resendVerificationSuccess": "Correo de verificacion enviado.",
+    "resendVerificationError": "Error al reenviar el correo de verificacion.",
     "addUser": "Agregar Usuario",
     "addUserCancel": "Cancelar",
     "addUserSubmit": "Crear Usuario",

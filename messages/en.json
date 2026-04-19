@@ -144,7 +144,8 @@
       "email": "Email Address",
       "role": "Role",
       "status": "Status",
-      "created": "Created"
+      "created": "Created",
+      "actions": "Actions"
     },
     "roles": {
       "admin": "admin",
@@ -152,6 +153,10 @@
     },
     "verified": "Verified",
     "pending": "Pending",
+    "resendVerification": "Resend",
+    "resendingVerification": "Sending...",
+    "resendVerificationSuccess": "Verification email sent.",
+    "resendVerificationError": "Failed to resend verification email.",
     "addUser": "Add User",
     "addUserCancel": "Cancel",
     "addUserSubmit": "Create User",

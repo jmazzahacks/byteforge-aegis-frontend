@@ -24,6 +24,8 @@ export default function SiteUsersPage() {
   const [isCreating, setIsCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
   const [createSuccess, setCreateSuccess] = useState<string | null>(null);
+  const [resendingUserId, setResendingUserId] = useState<number | null>(null);
+  const [resendFeedback, setResendFeedback] = useState<{ userId: number; kind: 'success' | 'error'; message: string } | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('aegis_admin_token');
@@ -64,6 +66,27 @@ export default function SiteUsersPage() {
       month: 'short',
       day: 'numeric'
     });
+  }
+
+  async function handleResendVerification(userId: number) {
+    const token = localStorage.getItem('aegis_admin_token');
+    if (!token) return;
+
+    setResendingUserId(userId);
+    setResendFeedback(null);
+
+    const result = await browserClient.aegisAdminResendVerification(userId, token);
+
+    if (result.success) {
+      setResendFeedback({ userId, kind: 'success', message: t('resendVerificationSuccess') });
+    } else {
+      setResendFeedback({ userId, kind: 'error', message: result.error || t('resendVerificationError') });
+    }
+
+    setResendingUserId(null);
+    setTimeout(() => {
+      setResendFeedback((prev) => (prev?.userId === userId ? null : prev));
+    }, 4000);
   }
 
   async function handleCreateUser(e: React.FormEvent) {
@@ -373,6 +396,10 @@ export default function SiteUsersPage() {
                     style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
                   {t('userTableHeaders.created')}
                 </th>
+                <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider"
+                    style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
+                  {t('userTableHeaders.actions')}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -422,11 +449,54 @@ export default function SiteUsersPage() {
                       {formatDate(user.created_at)}
                     </span>
                   </td>
+                  <td className="px-6 py-4 text-right">
+                    {!user.is_verified && (
+                      <div className="inline-flex flex-col items-end gap-1">
+                        <button
+                          type="button"
+                          onClick={() => handleResendVerification(user.id)}
+                          disabled={resendingUserId === user.id}
+                          className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                          style={{
+                            fontFamily: 'var(--font-display)',
+                            backgroundColor: 'var(--forge-steel)',
+                            border: '1px solid var(--forge-iron)',
+                            color: 'var(--forge-silver)',
+                          }}
+                          onMouseEnter={(e) => { if (resendingUserId !== user.id) { e.currentTarget.style.borderColor = 'var(--ember-glow)'; e.currentTarget.style.color = 'var(--ember-glow)'; } }}
+                          onMouseLeave={(e) => { if (resendingUserId !== user.id) { e.currentTarget.style.borderColor = 'var(--forge-iron)'; e.currentTarget.style.color = 'var(--forge-silver)'; } }}
+                        >
+                          {resendingUserId === user.id ? (
+                            <>
+                              <svg className="w-3.5 h-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                              </svg>
+                              {t('resendingVerification')}
+                            </>
+                          ) : (
+                            <>
+                              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                              </svg>
+                              {t('resendVerification')}
+                            </>
+                          )}
+                        </button>
+                        {resendFeedback?.userId === user.id && (
+                          <span className="text-[10px] font-medium"
+                                style={{ color: resendFeedback.kind === 'success' ? 'var(--success)' : 'var(--error)' }}>
+                            {resendFeedback.message}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </td>
                 </tr>
               ))}
               {users.length === 0 && !error && (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center">
+                  <td colSpan={6} className="px-6 py-12 text-center">
                     <div className="flex flex-col items-center gap-3">
                       <svg className="w-12 h-12" style={{ color: 'var(--forge-iron)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1}
