@@ -174,6 +174,16 @@
     "saveSiteError": "Error al guardar configuracion",
     "loadingSiteSettings": "Cargando configuracion del sitio...",
     "backToSite": "Volver al Sitio",
+    "webhookSecretHint": "Comparte esto con tu tenant para verificar las firmas del webhook.",
+    "showSecret": "Mostrar",
+    "hideSecret": "Ocultar",
+    "copySecret": "Copiar",
+    "copiedToClipboard": "Copiado",
+    "regenerateSecret": "Regenerar",
+    "confirmRegenerate": "Haz clic de nuevo para confirmar",
+    "regeneratingSecret": "Regenerando...",
+    "regenerateSecretSuccess": "Secreto del webhook regenerado.",
+    "regenerateSecretError": "Error al regenerar el secreto del webhook.",
     "siteFormLabels": {
       "name": "Nombre del Sitio",
       "domain": "Dominio",
@@ -182,7 +192,8 @@
       "emailFromName": "Nombre de Envio",
       "verificationRedirectUrl": "URL de Redireccion de Verificacion (opcional)",
       "allowSelfRegistration": "Permitir Auto-Registro",
-      "webhookUrl": "URL del Webhook (opcional)"
+      "webhookUrl": "URL del Webhook (opcional)",
+      "webhookSecret": "Secreto del Webhook"
     }
   },
   "LanguageSwitcher": {

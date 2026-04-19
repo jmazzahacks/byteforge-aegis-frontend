@@ -174,6 +174,16 @@
     "saveSiteError": "Не удалось сохранить настройки",
     "loadingSiteSettings": "Загрузка настроек сайта...",
     "backToSite": "Назад к Сайту",
+    "webhookSecretHint": "Поделитесь этим с вашим тенантом для проверки подписей вебхуков.",
+    "showSecret": "Показать",
+    "hideSecret": "Скрыть",
+    "copySecret": "Копировать",
+    "copiedToClipboard": "Скопировано",
+    "regenerateSecret": "Сгенерировать заново",
+    "confirmRegenerate": "Нажмите ещё раз для подтверждения",
+    "regeneratingSecret": "Генерация...",
+    "regenerateSecretSuccess": "Секрет вебхука сгенерирован заново.",
+    "regenerateSecretError": "Не удалось сгенерировать секрет вебхука.",
     "siteFormLabels": {
       "name": "Название Сайта",
       "domain": "Домен",
@@ -182,7 +192,8 @@
       "emailFromName": "Имя Отправителя",
       "verificationRedirectUrl": "URL Перенаправления Верификации (необязательно)",
       "allowSelfRegistration": "Разрешить Самостоятельную Регистрацию",
-      "webhookUrl": "URL Вебхука (необязательно)"
+      "webhookUrl": "URL Вебхука (необязательно)",
+      "webhookSecret": "Секрет Вебхука"
     }
   },
   "LanguageSwitcher": {
