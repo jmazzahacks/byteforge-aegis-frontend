@@ -194,6 +194,8 @@
     "regeneratingTenantKey": "Генерация...",
     "regenerateTenantKeySuccess": "Ключ API тенанта сгенерирован заново.",
     "regenerateTenantKeyError": "Не удалось сгенерировать ключ API тенанта.",
+    "mailgunDomainHint": "Отправляющий домен Mailgun для сайта (например, mg.tenantcorp.com). Оставьте пустым для использования глобального значения.",
+    "mailgunApiKeyHint": "Ключ API Mailgun для сайта. Оставьте пустым для использования глобального значения.",
     "siteFormLabels": {
       "name": "Название Сайта",
       "domain": "Домен",
@@ -204,7 +206,9 @@
       "allowSelfRegistration": "Разрешить Самостоятельную Регистрацию",
       "webhookUrl": "URL Вебхука (необязательно)",
       "webhookSecret": "Секрет Вебхука",
-      "tenantApiKey": "Ключ API Тенанта"
+      "tenantApiKey": "Ключ API Тенанта",
+      "mailgunDomain": "Домен Mailgun (необязательно)",
+      "mailgunApiKey": "Ключ API Mailgun (необязательно)"
     }
   },
   "LanguageSwitcher": {

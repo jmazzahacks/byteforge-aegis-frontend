@@ -194,6 +194,8 @@
     "regeneratingTenantKey": "Regenerando...",
     "regenerateTenantKeySuccess": "Clave API del tenant regenerada.",
     "regenerateTenantKeyError": "Error al regenerar la clave API del tenant.",
+    "mailgunDomainHint": "Dominio de envio de Mailgun por sitio (ej. mg.tenantcorp.com). Dejar vacio para usar el predeterminado global.",
+    "mailgunApiKeyHint": "Clave API de Mailgun por sitio. Dejar vacio para usar el predeterminado global.",
     "siteFormLabels": {
       "name": "Nombre del Sitio",
       "domain": "Dominio",
@@ -204,7 +206,9 @@
       "allowSelfRegistration": "Permitir Auto-Registro",
       "webhookUrl": "URL del Webhook (opcional)",
       "webhookSecret": "Secreto del Webhook",
-      "tenantApiKey": "Clave API del Tenant"
+      "tenantApiKey": "Clave API del Tenant",
+      "mailgunDomain": "Dominio de Mailgun (opcional)",
+      "mailgunApiKey": "Clave API de Mailgun (opcional)"
     }
   },
   "LanguageSwitcher": {

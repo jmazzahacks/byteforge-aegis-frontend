@@ -40,6 +40,10 @@ export default function EditSitePage() {
   const [confirmRegenTenantKey, setConfirmRegenTenantKey] = useState(false);
   const [isRegeneratingTenantKey, setIsRegeneratingTenantKey] = useState(false);
 
+  const [mailgunDomain, setMailgunDomain] = useState('');
+  const [mailgunApiKey, setMailgunApiKey] = useState('');
+  const [showMailgunKey, setShowMailgunKey] = useState(false);
+
   useEffect(() => {
     const token = localStorage.getItem('aegis_admin_token');
 
@@ -68,6 +72,8 @@ export default function EditSitePage() {
       setVerificationRedirectUrl(site.verification_redirect_url || '');
       setWebhookUrl(site.webhook_url || '');
       setAllowSelfRegistration(site.allow_self_registration);
+      setMailgunDomain(site.mailgun_domain || '');
+      setMailgunApiKey(site.mailgun_api_key || '');
     } else {
       setError(result.error || t('saveSiteError'));
     }
@@ -116,6 +122,12 @@ export default function EditSitePage() {
     }
     if (allowSelfRegistration !== originalSite.allow_self_registration) {
       updates.allow_self_registration = allowSelfRegistration;
+    }
+    if (mailgunDomain.trim() !== (originalSite.mailgun_domain || '')) {
+      updates.mailgun_domain = mailgunDomain.trim() || null;
+    }
+    if (mailgunApiKey.trim() !== (originalSite.mailgun_api_key || '')) {
+      updates.mailgun_api_key = mailgunApiKey.trim() || null;
     }
 
     if (Object.keys(updates).length === 0) {
@@ -507,6 +519,70 @@ export default function EditSitePage() {
                     className="input-forge block w-full px-4 py-3 rounded-lg text-sm"
                     style={{ color: 'var(--forge-light)' }}
                   />
+                </div>
+
+                {/* Mailgun Domain (per-site sending domain) */}
+                <div>
+                  <label className="block text-xs font-medium uppercase tracking-wider mb-2"
+                         style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
+                    {t('siteFormLabels.mailgunDomain')}
+                  </label>
+                  <input
+                    type="text"
+                    value={mailgunDomain}
+                    onChange={(e) => setMailgunDomain(e.target.value)}
+                    placeholder="mg.tenantcorp.com"
+                    className="input-forge block w-full px-4 py-3 rounded-lg text-sm"
+                    style={{ color: 'var(--forge-light)' }}
+                  />
+                  <p className="mt-2 text-xs" style={{ color: 'var(--forge-silver)' }}>
+                    {t('mailgunDomainHint')}
+                  </p>
+                </div>
+
+                {/* Mailgun API Key (per-site) */}
+                <div>
+                  <label className="block text-xs font-medium uppercase tracking-wider mb-2"
+                         style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
+                    {t('siteFormLabels.mailgunApiKey')}
+                  </label>
+                  <div className="flex items-stretch gap-2">
+                    <input
+                      type={showMailgunKey ? 'text' : 'password'}
+                      value={mailgunApiKey}
+                      onChange={(e) => setMailgunApiKey(e.target.value)}
+                      placeholder="key-..."
+                      className="input-forge block flex-1 px-4 py-3 rounded-lg text-sm font-mono"
+                      style={{ color: 'var(--forge-light)' }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowMailgunKey(!showMailgunKey)}
+                      title={showMailgunKey ? t('hideSecret') : t('showSecret')}
+                      className="px-3 rounded-lg transition-colors duration-200"
+                      style={{
+                        backgroundColor: 'var(--forge-steel)',
+                        border: '1px solid var(--forge-iron)',
+                        color: 'var(--forge-silver)',
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--ember-glow)'; e.currentTarget.style.color = 'var(--ember-glow)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--forge-iron)'; e.currentTarget.style.color = 'var(--forge-silver)'; }}
+                    >
+                      {showMailgunKey ? (
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.243 4.243L9.88 9.88" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                  <p className="mt-2 text-xs" style={{ color: 'var(--forge-silver)' }}>
+                    {t('mailgunApiKeyHint')}
+                  </p>
                 </div>
 
                 {/* Webhook URL */}
