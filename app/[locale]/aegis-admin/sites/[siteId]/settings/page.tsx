@@ -337,6 +337,7 @@ export default function EditSitePage() {
         {originalSite && (
           <p className="ml-16 mb-8 text-sm" style={{ color: 'var(--ember-glow)' }}>
             {originalSite.name} &mdash; {originalSite.domain}
+            <span className="ml-2 opacity-70">&middot; ID: {originalSite.id}</span>
           </p>
         )}
 
