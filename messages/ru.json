@@ -189,6 +189,11 @@
     "regeneratingSecret": "Генерация...",
     "regenerateSecretSuccess": "Секрет вебхука сгенерирован заново.",
     "regenerateSecretError": "Не удалось сгенерировать секрет вебхука.",
+    "tenantApiKeyHint": "Требуется на бэкенде каждого тенанта. Установите как переменную окружения AEGIS_TENANT_API_KEY. Никогда не размещайте в коде браузера.",
+    "regenerateTenantKey": "Сгенерировать заново",
+    "regeneratingTenantKey": "Генерация...",
+    "regenerateTenantKeySuccess": "Ключ API тенанта сгенерирован заново.",
+    "regenerateTenantKeyError": "Не удалось сгенерировать ключ API тенанта.",
     "siteFormLabels": {
       "name": "Название Сайта",
       "domain": "Домен",
@@ -198,7 +203,8 @@
       "verificationRedirectUrl": "URL Перенаправления Верификации (необязательно)",
       "allowSelfRegistration": "Разрешить Самостоятельную Регистрацию",
       "webhookUrl": "URL Вебхука (необязательно)",
-      "webhookSecret": "Секрет Вебхука"
+      "webhookSecret": "Секрет Вебхука",
+      "tenantApiKey": "Ключ API Тенанта"
     }
   },
   "LanguageSwitcher": {

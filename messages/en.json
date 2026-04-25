@@ -189,6 +189,11 @@
     "regeneratingSecret": "Regenerating...",
     "regenerateSecretSuccess": "Webhook secret regenerated.",
     "regenerateSecretError": "Failed to regenerate webhook secret.",
+    "tenantApiKeyHint": "Required server-side on every tenant backend. Set as AEGIS_TENANT_API_KEY env var. Never expose in browser code.",
+    "regenerateTenantKey": "Regenerate",
+    "regeneratingTenantKey": "Regenerating...",
+    "regenerateTenantKeySuccess": "Tenant API key regenerated.",
+    "regenerateTenantKeyError": "Failed to regenerate tenant API key.",
     "siteFormLabels": {
       "name": "Site Name",
       "domain": "Domain",
@@ -198,7 +203,8 @@
       "verificationRedirectUrl": "Verification Redirect URL (optional)",
       "allowSelfRegistration": "Allow Self-Registration",
       "webhookUrl": "Webhook URL (optional)",
-      "webhookSecret": "Webhook Secret"
+      "webhookSecret": "Webhook Secret",
+      "tenantApiKey": "Tenant API Key"
     }
   },
   "LanguageSwitcher": {

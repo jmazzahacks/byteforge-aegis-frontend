@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthClient } from '@/lib/authClient';
+import { getAuthClientForSite, resolveSiteIdFromRequest } from '@/lib/authClient';
 import { logger } from '@/lib/logger';
 
 export async function POST(request: NextRequest) {
@@ -14,7 +14,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const client = getAuthClient();
+    const siteId = await resolveSiteIdFromRequest(request);
+    if (!siteId) {
+      return NextResponse.json({ error: 'Site not found' }, { status: 400 });
+    }
+
+    const client = getAuthClientForSite(siteId);
     const result = await client.verifyEmail(token, password);
 
     if (result.success) {
