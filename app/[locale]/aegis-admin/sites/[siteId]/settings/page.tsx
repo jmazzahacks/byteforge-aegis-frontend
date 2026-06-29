@@ -961,10 +961,18 @@ export default function EditSitePage() {
                 <p className="text-sm mb-6" style={{ color: 'var(--forge-silver)' }}>
                   {t('deleteSiteModalWarning')}
                 </p>
-                <label className="block text-xs font-medium uppercase tracking-wider mb-2"
-                       style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
-                  {t('deleteSiteConfirmLabel', { domain: originalSite.domain })}
+                <label className="block text-xs mb-2"
+                       style={{ color: 'var(--forge-silver)' }}>
+                  {t('deleteSiteConfirmLabel')}
                 </label>
+                <div className="mb-3 px-4 py-2.5 rounded-lg text-sm font-mono select-all"
+                     style={{
+                       backgroundColor: 'var(--forge-steel)',
+                       border: '1px solid var(--forge-iron)',
+                       color: 'var(--ember-glow)',
+                     }}>
+                  {originalSite.domain}
+                </div>
                 <input
                   type="text"
                   autoFocus

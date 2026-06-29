@@ -201,7 +201,7 @@
     "deleteSiteDescription": "Elimina permanentemente este sitio y TODOS sus usuarios, tokens y datos. Esto no se puede deshacer.",
     "deleteSiteModalTitle": "¿Eliminar {name}?",
     "deleteSiteModalWarning": "Esto elimina permanentemente el sitio y TODOS sus usuarios, tokens y datos. Esta accion no se puede deshacer.",
-    "deleteSiteConfirmLabel": "Escribe el dominio {domain} para confirmar:",
+    "deleteSiteConfirmLabel": "Escribe el dominio del sitio para confirmar:",
     "deleteSiteConfirmPlaceholder": "Introduce el dominio del sitio",
     "deleteSiteConfirmButton": "Eliminar Sitio Permanentemente",
     "deletingSite": "Eliminando...",

@@ -201,7 +201,7 @@
     "deleteSiteDescription": "Permanently delete this site and ALL of its users, tokens, and data. This cannot be undone.",
     "deleteSiteModalTitle": "Delete {name}?",
     "deleteSiteModalWarning": "This permanently deletes the site and ALL of its users, tokens, and data. This action cannot be undone.",
-    "deleteSiteConfirmLabel": "Type the domain {domain} to confirm:",
+    "deleteSiteConfirmLabel": "Type the site domain to confirm:",
     "deleteSiteConfirmPlaceholder": "Enter the site domain",
     "deleteSiteConfirmButton": "Delete Site Permanently",
     "deletingSite": "Deleting...",

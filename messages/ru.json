@@ -201,7 +201,7 @@
     "deleteSiteDescription": "Безвозвратно удаляет этот сайт и ВСЕХ его пользователей, токены и данные. Это действие нельзя отменить.",
     "deleteSiteModalTitle": "Удалить {name}?",
     "deleteSiteModalWarning": "Это безвозвратно удалит сайт и ВСЕХ его пользователей, токены и данные. Это действие нельзя отменить.",
-    "deleteSiteConfirmLabel": "Введите домен {domain} для подтверждения:",
+    "deleteSiteConfirmLabel": "Введите домен сайта для подтверждения:",
     "deleteSiteConfirmPlaceholder": "Введите домен сайта",
     "deleteSiteConfirmButton": "Удалить сайт навсегда",
     "deletingSite": "Удаление...",
