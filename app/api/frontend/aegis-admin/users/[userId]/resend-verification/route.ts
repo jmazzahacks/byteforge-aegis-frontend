@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AuthClient } from 'byteforge-aegis-client-js';
 import { logger } from '@/lib/logger';
+import { requireAegisAdmin } from '@/lib/aegisAdminAuth';
 
 const API_URL = process.env.API_URL || 'http://localhost:5678';
 
@@ -17,12 +18,9 @@ export async function POST(
     );
   }
 
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return NextResponse.json(
-      { error: 'Authorization required' },
-      { status: 401 }
-    );
+  const auth = await requireAegisAdmin(request);
+  if (!auth.ok) {
+    return auth.response;
   }
 
   const { userId } = await params;

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AuthClient, UpdateSiteRequest } from 'byteforge-aegis-client-js';
 import { logger } from '@/lib/logger';
+import { requireAegisAdmin } from '@/lib/aegisAdminAuth';
 
 const API_URL = process.env.API_URL || 'http://localhost:5678';
 
@@ -17,12 +18,9 @@ export async function GET(
     );
   }
 
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return NextResponse.json(
-      { error: 'Authorization required' },
-      { status: 401 }
-    );
+  const auth = await requireAegisAdmin(request);
+  if (!auth.ok) {
+    return auth.response;
   }
 
   const { siteId } = await params;
@@ -70,12 +68,9 @@ export async function PUT(
     );
   }
 
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return NextResponse.json(
-      { error: 'Authorization required' },
-      { status: 401 }
-    );
+  const auth = await requireAegisAdmin(request);
+  if (!auth.ok) {
+    return auth.response;
   }
 
   const { siteId } = await params;
@@ -105,6 +100,56 @@ export async function PUT(
     }
   } catch (error) {
     logger.error('Update site failed', { route: '/api/frontend/aegis-admin/sites/[siteId]', error: String(error) });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ siteId: string }> }
+) {
+  const masterApiKey = process.env.MASTER_API_KEY;
+
+  if (!masterApiKey) {
+    return NextResponse.json(
+      { error: 'MASTER_API_KEY is not configured' },
+      { status: 500 }
+    );
+  }
+
+  const auth = await requireAegisAdmin(request);
+  if (!auth.ok) {
+    return auth.response;
+  }
+
+  const { siteId } = await params;
+  const siteIdNum = parseInt(siteId, 10);
+
+  if (isNaN(siteIdNum)) {
+    return NextResponse.json(
+      { error: 'Invalid site ID' },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const client = new AuthClient({ apiUrl: API_URL, masterApiKey });
+    const result = await client.deleteSite(siteIdNum);
+
+    if (result.success) {
+      logger.info('Site deleted', { route: '/api/frontend/aegis-admin/sites/[siteId]', siteId });
+      return NextResponse.json(result.data);
+    } else {
+      return NextResponse.json(
+        { error: result.error },
+        { status: result.statusCode || 500 }
+      );
+    }
+  } catch (error) {
+    logger.error('Delete site failed', { route: '/api/frontend/aegis-admin/sites/[siteId]', error: String(error) });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

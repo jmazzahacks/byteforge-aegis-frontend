@@ -44,6 +44,10 @@ export default function EditSitePage() {
   const [mailgunApiKey, setMailgunApiKey] = useState('');
   const [showMailgunKey, setShowMailgunKey] = useState(false);
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
   useEffect(() => {
     const token = localStorage.getItem('aegis_admin_token');
 
@@ -233,6 +237,42 @@ export default function EditSitePage() {
       // Clipboard rejected (rare — focus/permission). Absence of checkmark is the signal.
     }
   }
+
+  function openDeleteModal() {
+    setDeleteConfirmText('');
+    setError(null);
+    setSuccess(null);
+    setShowDeleteModal(true);
+  }
+
+  function closeDeleteModal() {
+    if (isDeleting) return;
+    setShowDeleteModal(false);
+    setDeleteConfirmText('');
+  }
+
+  async function handleDeleteSite() {
+    const token = localStorage.getItem('aegis_admin_token');
+    if (!token || !originalSite) return;
+    // Guard: the button is only enabled on an exact domain match, but re-check
+    // here so the deletion can never fire on a mismatch.
+    if (deleteConfirmText !== originalSite.domain) return;
+
+    setIsDeleting(true);
+    setError(null);
+
+    const result = await browserClient.aegisAdminDeleteSite(siteId, token);
+
+    if (result.success) {
+      router.push('/aegis-admin/dashboard');
+    } else {
+      setError(result.error || t('deleteSiteError'));
+      setIsDeleting(false);
+      setShowDeleteModal(false);
+    }
+  }
+
+  const deleteConfirmed = originalSite !== null && deleteConfirmText === originalSite.domain;
 
   if (isLoading) {
     return (
@@ -861,6 +901,123 @@ export default function EditSitePage() {
             </div>
           </div>
         </form>
+
+        {/* Danger Zone */}
+        <div className="mt-10 rounded-xl overflow-hidden"
+             style={{
+               backgroundColor: 'var(--forge-charcoal)',
+               border: '1px solid var(--error)',
+             }}>
+          <div className="p-8 lg:p-10">
+            <div className="flex items-center gap-3 mb-4">
+              <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="var(--error)" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+              </svg>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.2em]"
+                    style={{ fontFamily: 'var(--font-display)', color: 'var(--error)' }}>
+                {t('dangerZone')}
+              </span>
+              <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(239, 68, 68, 0.3)' }} />
+            </div>
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <p className="text-sm max-w-xl" style={{ color: 'var(--forge-silver)' }}>
+                {t('deleteSiteDescription')}
+              </p>
+              <button
+                type="button"
+                onClick={openDeleteModal}
+                className="shrink-0 px-6 py-2.5 text-sm font-semibold uppercase tracking-wider rounded-lg transition-all duration-200"
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  color: 'var(--error)',
+                  backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                  border: '1px solid var(--error)',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--error)'; e.currentTarget.style.color = 'var(--forge-light)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'; e.currentTarget.style.color = 'var(--error)'; }}
+              >
+                {t('deleteSiteButton')}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Delete confirmation modal */}
+        {showDeleteModal && originalSite && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+               style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(4px)' }}
+               onClick={closeDeleteModal}>
+            <div className="w-full max-w-lg rounded-xl overflow-hidden"
+                 style={{
+                   backgroundColor: 'var(--forge-charcoal)',
+                   border: '1px solid var(--error)',
+                 }}
+                 onClick={(e) => e.stopPropagation()}>
+              <div className="p-8">
+                <h3 className="text-xl font-semibold tracking-wide mb-4"
+                    style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-light)' }}>
+                  {t('deleteSiteModalTitle', { name: originalSite.name })}
+                </h3>
+                <p className="text-sm mb-6" style={{ color: 'var(--forge-silver)' }}>
+                  {t('deleteSiteModalWarning')}
+                </p>
+                <label className="block text-xs font-medium uppercase tracking-wider mb-2"
+                       style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-silver)' }}>
+                  {t('deleteSiteConfirmLabel', { domain: originalSite.domain })}
+                </label>
+                <input
+                  type="text"
+                  autoFocus
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  placeholder={t('deleteSiteConfirmPlaceholder')}
+                  className="input-forge block w-full px-4 py-3 rounded-lg text-sm font-mono mb-6"
+                  style={{ color: 'var(--forge-light)' }}
+                />
+                <div className="flex items-center justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={closeDeleteModal}
+                    disabled={isDeleting}
+                    className="px-6 py-2.5 text-sm uppercase tracking-wider rounded-lg transition-all duration-200 disabled:opacity-50"
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      color: 'var(--forge-silver)',
+                      backgroundColor: 'var(--forge-steel)',
+                      border: '1px solid var(--forge-iron)',
+                    }}
+                  >
+                    {t('deleteSiteCancel')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleDeleteSite}
+                    disabled={!deleteConfirmed || isDeleting}
+                    className="px-6 py-2.5 text-sm font-semibold uppercase tracking-wider rounded-lg transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      color: 'var(--forge-light)',
+                      backgroundColor: 'var(--error)',
+                      border: '1px solid var(--error)',
+                    }}
+                  >
+                    {isDeleting ? (
+                      <span className="inline-flex items-center gap-2">
+                        <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                        {t('deletingSite')}
+                      </span>
+                    ) : (
+                      t('deleteSiteConfirmButton')
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Footer decoration */}
         <div className="flex items-center justify-center gap-3 mt-12">

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AuthClient, CreateSiteRequest } from 'byteforge-aegis-client-js';
 import { logger } from '@/lib/logger';
+import { requireAegisAdmin } from '@/lib/aegisAdminAuth';
 
 const API_URL = process.env.API_URL || 'http://localhost:5678';
 
@@ -15,12 +16,9 @@ export async function GET(request: NextRequest) {
   }
 
   // Verify caller has a valid Bearer token (prevents unauthorized browser access)
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return NextResponse.json(
-      { error: 'Authorization required' },
-      { status: 401 }
-    );
+  const auth = await requireAegisAdmin(request);
+  if (!auth.ok) {
+    return auth.response;
   }
 
   try {
@@ -55,12 +53,9 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return NextResponse.json(
-      { error: 'Authorization required' },
-      { status: 401 }
-    );
+  const auth = await requireAegisAdmin(request);
+  if (!auth.ok) {
+    return auth.response;
   }
 
   try {

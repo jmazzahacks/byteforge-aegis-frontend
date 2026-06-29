@@ -209,6 +209,19 @@ export const browserClient = {
   },
 
   /**
+   * Delete a site and ALL of its data (aegis super-admin only).
+   * Irreversible — removes every user, token, and record for the site.
+   */
+  async aegisAdminDeleteSite(siteId: number, authToken: string): Promise<ApiResponse<{ message: string }>> {
+    return request<{ message: string }>(`/api/frontend/aegis-admin/sites/${siteId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+      },
+    });
+  },
+
+  /**
    * Resend verification email for an unverified user (aegis super-admin only).
    */
   async aegisAdminResendVerification(userId: number, authToken: string): Promise<ApiResponse<{ message: string }>> {
