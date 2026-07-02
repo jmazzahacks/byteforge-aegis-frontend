@@ -232,6 +232,34 @@ export const browserClient = {
       },
     });
   },
+
+  /**
+   * Fetch the currently authenticated aegis super-admin's own user record.
+   *
+   * Used to reliably resolve "who am I" when the cached id is missing/stale.
+   */
+  async aegisAdminGetMe(authToken: string): Promise<ApiResponse<User>> {
+    return request<User>(`/api/frontend/aegis-admin/me`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+      },
+    });
+  },
+
+  /**
+   * Delete a user and all of their data (aegis super-admin only).
+   *
+   * Irreversible — removes the user and every token/record belonging to them.
+   */
+  async aegisAdminDeleteUser(userId: number, authToken: string): Promise<ApiResponse<{ message: string }>> {
+    return request<{ message: string }>(`/api/frontend/aegis-admin/users/${userId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+      },
+    });
+  },
 };
 
 export type { Site, User, LoginResponse, ApiResponse, CreateSiteRequest, UpdateSiteRequest };
