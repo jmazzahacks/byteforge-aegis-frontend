@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     const client = getAuthClient();
 
-    // Resolve admin site_id from domain
+    // Resolve admin site UUID from domain
     const siteResult = await client.getSiteByDomain(adminDomain);
     if (!siteResult.success) {
       return NextResponse.json(
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const siteId = siteResult.data.id;
+    const siteId = siteResult.data.uuid;
 
     // Login against the admin site
     const loginResult = await client.login(email, password, siteId);

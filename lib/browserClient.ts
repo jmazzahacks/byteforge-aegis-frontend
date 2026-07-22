@@ -53,7 +53,7 @@ export const browserClient = {
   /**
    * Login with email and password
    */
-  async login(siteId: number, email: string, password: string): Promise<ApiResponse<LoginResponse>> {
+  async login(siteId: string, email: string, password: string): Promise<ApiResponse<LoginResponse>> {
     return request<LoginResponse>('/api/frontend/login', {
       method: 'POST',
       body: JSON.stringify({ site_id: siteId, email, password }),
@@ -118,7 +118,7 @@ export const browserClient = {
    * Create a user for a specific site (aegis super-admin only).
    * Uses the MASTER_API_KEY server-side to register users on any site.
    */
-  async aegisAdminCreateUser(siteId: number, email: string, role: string, authToken: string): Promise<ApiResponse<User>> {
+  async aegisAdminCreateUser(siteId: string, email: string, role: string, authToken: string): Promise<ApiResponse<User>> {
     return request<User>(`/api/frontend/aegis-admin/sites/${siteId}/users`, {
       method: 'POST',
       body: JSON.stringify({ email, role }),
@@ -146,7 +146,7 @@ export const browserClient = {
    * List all users for a specific site (aegis super-admin only).
    * Requires the caller's auth token for authorization.
    */
-  async aegisAdminListUsersBySite(siteId: number, authToken: string): Promise<ApiResponse<User[]>> {
+  async aegisAdminListUsersBySite(siteId: string, authToken: string): Promise<ApiResponse<User[]>> {
     return request<User[]>(`/api/frontend/aegis-admin/sites/${siteId}/users`, {
       headers: {
         'Authorization': `Bearer ${authToken}`,
@@ -187,7 +187,7 @@ export const browserClient = {
   /**
    * Get a site by ID (aegis super-admin only).
    */
-  async aegisAdminGetSiteById(siteId: number, authToken: string): Promise<ApiResponse<Site>> {
+  async aegisAdminGetSiteById(siteId: string, authToken: string): Promise<ApiResponse<Site>> {
     return request<Site>(`/api/frontend/aegis-admin/sites/${siteId}`, {
       headers: {
         'Authorization': `Bearer ${authToken}`,
@@ -198,7 +198,7 @@ export const browserClient = {
   /**
    * Update a site (aegis super-admin only).
    */
-  async aegisAdminUpdateSite(siteId: number, updates: UpdateSiteRequest, authToken: string): Promise<ApiResponse<Site>> {
+  async aegisAdminUpdateSite(siteId: string, updates: UpdateSiteRequest, authToken: string): Promise<ApiResponse<Site>> {
     return request<Site>(`/api/frontend/aegis-admin/sites/${siteId}`, {
       method: 'PUT',
       body: JSON.stringify(updates),
@@ -212,7 +212,7 @@ export const browserClient = {
    * Delete a site and ALL of its data (aegis super-admin only).
    * Irreversible — removes every user, token, and record for the site.
    */
-  async aegisAdminDeleteSite(siteId: number, authToken: string): Promise<ApiResponse<{ message: string }>> {
+  async aegisAdminDeleteSite(siteId: string, authToken: string): Promise<ApiResponse<{ message: string }>> {
     return request<{ message: string }>(`/api/frontend/aegis-admin/sites/${siteId}`, {
       method: 'DELETE',
       headers: {
@@ -224,7 +224,7 @@ export const browserClient = {
   /**
    * Resend verification email for an unverified user (aegis super-admin only).
    */
-  async aegisAdminResendVerification(userId: number, authToken: string): Promise<ApiResponse<{ message: string }>> {
+  async aegisAdminResendVerification(userId: string, authToken: string): Promise<ApiResponse<{ message: string }>> {
     return request<{ message: string }>(`/api/frontend/aegis-admin/users/${userId}/resend-verification`, {
       method: 'POST',
       headers: {
@@ -252,7 +252,7 @@ export const browserClient = {
    *
    * Irreversible — removes the user and every token/record belonging to them.
    */
-  async aegisAdminDeleteUser(userId: number, authToken: string): Promise<ApiResponse<{ message: string }>> {
+  async aegisAdminDeleteUser(userId: string, authToken: string): Promise<ApiResponse<{ message: string }>> {
     return request<{ message: string }>(`/api/frontend/aegis-admin/users/${userId}`, {
       method: 'DELETE',
       headers: {

@@ -11,7 +11,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 export default function EditSitePage() {
   const router = useRouter();
   const params = useParams();
-  const siteId = Number(params.siteId);
+  const siteId = String(params.siteId);
   const t = useTranslations('AegisAdmin');
   const tCommon = useTranslations('Common');
 
@@ -389,7 +389,7 @@ export default function EditSitePage() {
         {originalSite && (
           <p className="ml-16 mb-8 text-sm" style={{ color: 'var(--ember-glow)' }}>
             {originalSite.name} &mdash; {originalSite.domain}
-            <span className="ml-2 opacity-70">&middot; ID: {originalSite.id}</span>
+            <span className="ml-2 opacity-70">&middot; ID: {originalSite.uuid}</span>
           </p>
         )}
 

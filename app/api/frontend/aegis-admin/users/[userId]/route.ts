@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AuthClient } from 'byteforge-aegis-client-js';
 import { logger } from '@/lib/logger';
 import { requireAegisAdmin } from '@/lib/aegisAdminAuth';
+import { isUuid } from '@/lib/uuid';
 
 const API_URL = process.env.API_URL || 'http://localhost:5678';
 
@@ -25,23 +26,20 @@ export async function DELETE(
 
   const { userId } = await params;
 
-  // Strict integer validation — parseInt alone would accept numeric-prefixed
-  // junk ("12abc" -> 12) and silently truncate a UUID, deleting the wrong
-  // user. Match the backend's isdigit() strictness and reject anything else.
-  if (!/^\d+$/.test(userId)) {
+  if (!isUuid(userId)) {
     return NextResponse.json(
       { error: 'Invalid user ID' },
       { status: 400 }
     );
   }
-  const userIdNum = parseInt(userId, 10);
 
   // Guard against self-deletion: an aegis admin must not delete the account
   // they are currently authenticated as (would lock them out mid-session).
-  if (auth.user.id === userIdNum) {
+  // Postgres stores UUIDs lowercase; normalize before comparing.
+  if (auth.user.uuid === userId.toLowerCase()) {
     logger.warning('Aegis admin attempted to delete their own account', {
       route: '/api/frontend/aegis-admin/users/[userId]',
-      userId: String(userIdNum),
+      userId,
     });
     return NextResponse.json(
       { error: 'You cannot delete the account you are logged in as' },
@@ -51,7 +49,7 @@ export async function DELETE(
 
   try {
     const client = new AuthClient({ apiUrl: API_URL, masterApiKey });
-    const result = await client.deleteUser(userIdNum);
+    const result = await client.deleteUser(userId);
 
     if (result.success) {
       logger.info('User deleted', { route: '/api/frontend/aegis-admin/users/[userId]', userId });

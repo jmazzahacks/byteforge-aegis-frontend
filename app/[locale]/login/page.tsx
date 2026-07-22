@@ -51,13 +51,13 @@ function LoginContent() {
     setStatus('loading');
     setMessage(t('authenticating'));
 
-    const result = await browserClient.login(site.id, email, password);
+    const result = await browserClient.login(site.uuid, email, password);
 
     if (result.success) {
       localStorage.setItem('auth_token', result.data.auth_token.token);
       localStorage.setItem('refresh_token', result.data.refresh_token.token);
-      localStorage.setItem('user_id', result.data.auth_token.user_id.toString());
-      localStorage.setItem('site_id', site.id.toString());
+      localStorage.setItem('user_id', result.data.auth_token.user_uuid);
+      localStorage.setItem('site_id', site.uuid);
       localStorage.setItem('site_name', site.name);
 
       setStatus('success');

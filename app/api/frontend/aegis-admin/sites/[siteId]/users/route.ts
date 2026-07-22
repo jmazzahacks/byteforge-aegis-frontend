@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AuthClient, UserRole } from 'byteforge-aegis-client-js';
 import { logger } from '@/lib/logger';
 import { requireAegisAdmin } from '@/lib/aegisAdminAuth';
+import { isUuid } from '@/lib/uuid';
 
 const API_URL = process.env.API_URL || 'http://localhost:5678';
 
@@ -24,9 +25,7 @@ export async function GET(
   }
 
   const { siteId } = await params;
-  const siteIdNum = parseInt(siteId, 10);
-
-  if (isNaN(siteIdNum)) {
+  if (!isUuid(siteId)) {
     return NextResponse.json(
       { error: 'Invalid site ID' },
       { status: 400 }
@@ -35,7 +34,7 @@ export async function GET(
 
   try {
     const client = new AuthClient({ apiUrl: API_URL, masterApiKey });
-    const result = await client.listUsersBySite(siteIdNum);
+    const result = await client.listUsersBySite(siteId);
 
     if (result.success) {
       logger.info('Site users listed', { route: '/api/frontend/aegis-admin/sites/[siteId]/users', siteId });
@@ -74,9 +73,7 @@ export async function POST(
   }
 
   const { siteId } = await params;
-  const siteIdNum = parseInt(siteId, 10);
-
-  if (isNaN(siteIdNum)) {
+  if (!isUuid(siteId)) {
     return NextResponse.json(
       { error: 'Invalid site ID' },
       { status: 400 }
@@ -96,7 +93,7 @@ export async function POST(
 
     const client = new AuthClient({ apiUrl: API_URL, masterApiKey });
     const userRole = role === 'admin' ? 'admin' as UserRole : 'user' as UserRole;
-    const result = await client.registerAdmin(email, siteIdNum, userRole);
+    const result = await client.registerAdmin(email, siteId, userRole);
 
     if (result.success) {
       logger.info('User created via aegis admin', { route: '/api/frontend/aegis-admin/sites/[siteId]/users', siteId, email });

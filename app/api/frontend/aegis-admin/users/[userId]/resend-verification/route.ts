@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AuthClient } from 'byteforge-aegis-client-js';
 import { logger } from '@/lib/logger';
 import { requireAegisAdmin } from '@/lib/aegisAdminAuth';
+import { isUuid } from '@/lib/uuid';
 
 const API_URL = process.env.API_URL || 'http://localhost:5678';
 
@@ -24,9 +25,7 @@ export async function POST(
   }
 
   const { userId } = await params;
-  const userIdNum = parseInt(userId, 10);
-
-  if (isNaN(userIdNum)) {
+  if (!isUuid(userId)) {
     return NextResponse.json(
       { error: 'Invalid user ID' },
       { status: 400 }
@@ -35,7 +34,7 @@ export async function POST(
 
   try {
     const client = new AuthClient({ apiUrl: API_URL, masterApiKey });
-    const result = await client.resendVerification(userIdNum);
+    const result = await client.resendVerification(userId);
 
     if (result.success) {
       logger.info('Verification email resent', { route: '/api/frontend/aegis-admin/users/[userId]/resend-verification', userId });

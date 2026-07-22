@@ -43,7 +43,7 @@ export default function AegisAdminLoginPage() {
     if (result.success) {
       localStorage.setItem('aegis_admin_token', result.data.auth_token.token);
       localStorage.setItem('aegis_admin_refresh_token', result.data.refresh_token.token);
-      localStorage.setItem('aegis_admin_user_id', result.data.auth_token.user_id.toString());
+      localStorage.setItem('aegis_admin_user_id', result.data.auth_token.user_uuid);
 
       setStatus('success');
       setMessage(t('accessGranted'));

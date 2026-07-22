@@ -343,7 +343,7 @@ export default function AdminDashboard() {
             </thead>
             <tbody>
               {users.map((user, index) => (
-                <tr key={user.id}
+                <tr key={user.uuid}
                     className="transition-colors duration-150"
                     style={{
                       borderTop: '1px solid var(--forge-iron)',

@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { useParams } from 'next/navigation';
 import { browserClient } from '@/lib/browserClient';
+import { isUuid } from '@/lib/uuid';
 import type { User } from 'byteforge-aegis-client-js';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
@@ -12,7 +13,7 @@ export default function SiteUsersPage() {
   const router = useRouter();
   const locale = useLocale();
   const params = useParams();
-  const siteId = Number(params.siteId);
+  const siteId = String(params.siteId);
   const t = useTranslations('AegisAdmin');
   const tCommon = useTranslations('Common');
   const [isLoading, setIsLoading] = useState(true);
@@ -24,9 +25,9 @@ export default function SiteUsersPage() {
   const [isCreating, setIsCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
   const [createSuccess, setCreateSuccess] = useState<string | null>(null);
-  const [resendingUserId, setResendingUserId] = useState<number | null>(null);
-  const [resendFeedback, setResendFeedback] = useState<{ userId: number; kind: 'success' | 'error'; message: string } | null>(null);
-  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+  const [resendingUserId, setResendingUserId] = useState<string | null>(null);
+  const [resendFeedback, setResendFeedback] = useState<{ userId: string; kind: 'success' | 'error'; message: string } | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [deleteModalUser, setDeleteModalUser] = useState<User | null>(null);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [isDeletingUser, setIsDeletingUser] = useState(false);
@@ -46,19 +47,18 @@ export default function SiteUsersPage() {
 
   async function initCurrentUserId(token: string) {
     const storedUserId = localStorage.getItem('aegis_admin_user_id');
-    const parsed = storedUserId ? Number(storedUserId) : NaN;
-    if (!Number.isNaN(parsed)) {
-      setCurrentUserId(parsed);
+    if (storedUserId && isUuid(storedUserId)) {
+      setCurrentUserId(storedUserId);
       return;
     }
 
-    // Cached id is missing or corrupt (e.g. a session created before it was
-    // stored). Resolve it from the server so the self-delete hide can't
-    // silently fail, and repair the cache.
+    // Cached id is missing or not a UUID (e.g. a session cached before the
+    // int->UUID contract). Resolve it from the server so the self-delete hide
+    // can't silently fail, and repair the cache.
     const result = await browserClient.aegisAdminGetMe(token);
     if (result.success) {
-      setCurrentUserId(result.data.id);
-      localStorage.setItem('aegis_admin_user_id', String(result.data.id));
+      setCurrentUserId(result.data.uuid);
+      localStorage.setItem('aegis_admin_user_id', result.data.uuid);
     }
   }
 
@@ -92,7 +92,7 @@ export default function SiteUsersPage() {
     });
   }
 
-  async function handleResendVerification(userId: number) {
+  async function handleResendVerification(userId: string) {
     const token = localStorage.getItem('aegis_admin_token');
     if (!token) return;
 
@@ -134,7 +134,7 @@ export default function SiteUsersPage() {
     // Localized client-side backstops for the two cases the server also
     // enforces (400 self-delete / 409 last-admin), so a stale-session edge
     // shows a clean message instead of the raw English server string.
-    if (currentUserId !== null && deleteModalUser.id === currentUserId) {
+    if (currentUserId !== null && deleteModalUser.uuid === currentUserId) {
       setDeleteUserError(t('deleteUserSelfError'));
       return;
     }
@@ -147,7 +147,7 @@ export default function SiteUsersPage() {
     setIsDeletingUser(true);
     setDeleteUserError(null);
 
-    const result = await browserClient.aegisAdminDeleteUser(deleteModalUser.id, token);
+    const result = await browserClient.aegisAdminDeleteUser(deleteModalUser.uuid, token);
 
     if (result.success) {
       setDeleteModalUser(null);
@@ -478,7 +478,7 @@ export default function SiteUsersPage() {
             </thead>
             <tbody>
               {users.map((user, index) => (
-                <tr key={user.id}
+                <tr key={user.uuid}
                     className="transition-colors duration-150"
                     style={{
                       borderTop: '1px solid var(--forge-iron)',
@@ -486,7 +486,7 @@ export default function SiteUsersPage() {
                     }}>
                   <td className="px-6 py-4">
                     <span className="text-sm font-mono" style={{ color: 'var(--forge-silver)' }}>
-                      {user.id}
+                      {user.uuid}
                     </span>
                   </td>
                   <td className="px-6 py-4">
@@ -529,8 +529,8 @@ export default function SiteUsersPage() {
                       <div className="inline-flex flex-col items-end gap-1">
                         <button
                           type="button"
-                          onClick={() => handleResendVerification(user.id)}
-                          disabled={resendingUserId === user.id}
+                          onClick={() => handleResendVerification(user.uuid)}
+                          disabled={resendingUserId === user.uuid}
                           className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                           style={{
                             fontFamily: 'var(--font-display)',
@@ -538,10 +538,10 @@ export default function SiteUsersPage() {
                             border: '1px solid var(--forge-iron)',
                             color: 'var(--forge-silver)',
                           }}
-                          onMouseEnter={(e) => { if (resendingUserId !== user.id) { e.currentTarget.style.borderColor = 'var(--ember-glow)'; e.currentTarget.style.color = 'var(--ember-glow)'; } }}
-                          onMouseLeave={(e) => { if (resendingUserId !== user.id) { e.currentTarget.style.borderColor = 'var(--forge-iron)'; e.currentTarget.style.color = 'var(--forge-silver)'; } }}
+                          onMouseEnter={(e) => { if (resendingUserId !== user.uuid) { e.currentTarget.style.borderColor = 'var(--ember-glow)'; e.currentTarget.style.color = 'var(--ember-glow)'; } }}
+                          onMouseLeave={(e) => { if (resendingUserId !== user.uuid) { e.currentTarget.style.borderColor = 'var(--forge-iron)'; e.currentTarget.style.color = 'var(--forge-silver)'; } }}
                         >
-                          {resendingUserId === user.id ? (
+                          {resendingUserId === user.uuid ? (
                             <>
                               <svg className="w-3.5 h-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
@@ -558,7 +558,7 @@ export default function SiteUsersPage() {
                             </>
                           )}
                         </button>
-                        {resendFeedback?.userId === user.id && (
+                        {resendFeedback?.userId === user.uuid && (
                           <span className="text-[10px] font-medium"
                                 style={{ color: resendFeedback.kind === 'success' ? 'var(--success)' : 'var(--error)' }}>
                             {resendFeedback.message}
@@ -566,7 +566,7 @@ export default function SiteUsersPage() {
                         )}
                       </div>
                     )}
-                    {user.id !== currentUserId && (
+                    {user.uuid !== currentUserId && (
                       <button
                         type="button"
                         onClick={() => openDeleteUserModal(user)}

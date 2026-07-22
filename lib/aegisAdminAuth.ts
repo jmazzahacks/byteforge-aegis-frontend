@@ -47,7 +47,7 @@ export async function requireAegisAdmin(request: NextRequest): Promise<AegisAdmi
     };
   }
 
-  // Validate the token against the backend and load the user record (role, site_id).
+  // Validate the token against the backend and load the user record (role, site_uuid).
   const client = new AuthClient({ apiUrl: API_URL });
   client.setAuthToken(token);
 
@@ -70,10 +70,10 @@ export async function requireAegisAdmin(request: NextRequest): Promise<AegisAdmi
     };
   }
 
-  if (user.site_id !== siteResult.data.id || user.role !== 'admin') {
+  if (user.site_uuid !== siteResult.data.uuid || user.role !== 'admin') {
     logger.warning('Aegis admin authorization denied', {
-      userId: String(user.id),
-      userSiteId: String(user.site_id),
+      userId: user.uuid,
+      userSiteId: user.site_uuid,
       role: user.role,
     });
     return {

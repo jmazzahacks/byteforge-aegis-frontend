@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AuthClient, UpdateSiteRequest } from 'byteforge-aegis-client-js';
 import { logger } from '@/lib/logger';
 import { requireAegisAdmin } from '@/lib/aegisAdminAuth';
+import { isUuid } from '@/lib/uuid';
 
 const API_URL = process.env.API_URL || 'http://localhost:5678';
 
@@ -24,9 +25,7 @@ export async function GET(
   }
 
   const { siteId } = await params;
-  const siteIdNum = parseInt(siteId, 10);
-
-  if (isNaN(siteIdNum)) {
+  if (!isUuid(siteId)) {
     return NextResponse.json(
       { error: 'Invalid site ID' },
       { status: 400 }
@@ -35,7 +34,7 @@ export async function GET(
 
   try {
     const client = new AuthClient({ apiUrl: API_URL, masterApiKey });
-    const result = await client.getSite(siteIdNum);
+    const result = await client.getSite(siteId);
 
     if (result.success) {
       logger.info('Site fetched', { route: '/api/frontend/aegis-admin/sites/[siteId]', siteId });
@@ -74,9 +73,7 @@ export async function PUT(
   }
 
   const { siteId } = await params;
-  const siteIdNum = parseInt(siteId, 10);
-
-  if (isNaN(siteIdNum)) {
+  if (!isUuid(siteId)) {
     return NextResponse.json(
       { error: 'Invalid site ID' },
       { status: 400 }
@@ -87,7 +84,7 @@ export async function PUT(
     const body: UpdateSiteRequest = await request.json();
 
     const client = new AuthClient({ apiUrl: API_URL, masterApiKey });
-    const result = await client.updateSite(siteIdNum, body);
+    const result = await client.updateSite(siteId, body);
 
     if (result.success) {
       logger.info('Site updated', { route: '/api/frontend/aegis-admin/sites/[siteId]', siteId });
@@ -126,9 +123,7 @@ export async function DELETE(
   }
 
   const { siteId } = await params;
-  const siteIdNum = parseInt(siteId, 10);
-
-  if (isNaN(siteIdNum)) {
+  if (!isUuid(siteId)) {
     return NextResponse.json(
       { error: 'Invalid site ID' },
       { status: 400 }
@@ -137,7 +132,7 @@ export async function DELETE(
 
   try {
     const client = new AuthClient({ apiUrl: API_URL, masterApiKey });
-    const result = await client.deleteSite(siteIdNum);
+    const result = await client.deleteSite(siteId);
 
     if (result.success) {
       logger.info('Site deleted', { route: '/api/frontend/aegis-admin/sites/[siteId]', siteId });

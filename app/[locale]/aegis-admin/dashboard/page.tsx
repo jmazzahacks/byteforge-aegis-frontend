@@ -225,8 +225,8 @@ export default function AegisAdminDashboard() {
             </thead>
             <tbody>
               {sites.map((site, index) => (
-                <tr key={site.id}
-                    onClick={() => router.push(`/aegis-admin/sites/${site.id}`)}
+                <tr key={site.uuid}
+                    onClick={() => router.push(`/aegis-admin/sites/${site.uuid}`)}
                     className="transition-colors duration-150 cursor-pointer hover:brightness-125"
                     style={{
                       borderTop: '1px solid var(--forge-iron)',
