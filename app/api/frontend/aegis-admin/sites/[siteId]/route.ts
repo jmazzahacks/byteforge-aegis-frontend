@@ -83,6 +83,31 @@ export async function PUT(
   try {
     const body: UpdateSiteRequest = await request.json();
 
+    // Deletion protection is one-directional from this console: it may be
+    // turned ON here, but clearing it is the dangerous half — it re-arms
+    // irreversible deletes across an entire tenant that was marked precisely
+    // because losing its accounts is unrecoverable. Refuse rather than merely
+    // hiding a control: this BFF holds the MASTER_API_KEY, so anything it is
+    // willing to do is reachable by any authenticated aegis admin with
+    // devtools. Clearing stays an explicit master-key API call made outside
+    // the console.
+    // Reject anything that is not literally `true`, not merely `=== false`:
+    // the backend coerces "false", "0", "off", 0 and friends to False, so a
+    // strict false-check would let a string through and silently clear
+    // tenant-wide protection using the master key.
+    if (body !== null && typeof body === 'object' && 'deletion_protected' in body
+        && body.deletion_protected !== true) {
+      logger.warning('Aegis admin attempted to clear site deletion protection via the console', {
+        route: '/api/frontend/aegis-admin/sites/[siteId]',
+        siteId,
+        actor: auth.user.uuid,
+      });
+      return NextResponse.json(
+        { error: 'Deletion protection can only be enabled here; clearing it requires an explicit admin API call' },
+        { status: 400 }
+      );
+    }
+
     const client = new AuthClient({ apiUrl: API_URL, masterApiKey });
     const result = await client.updateSite(siteId, body);
 

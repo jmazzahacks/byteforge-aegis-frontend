@@ -32,6 +32,10 @@ export default function SiteUsersPage() {
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [isDeletingUser, setIsDeletingUser] = useState(false);
   const [deleteUserError, setDeleteUserError] = useState<string | null>(null);
+  const [siteProtected, setSiteProtected] = useState(false);
+  const [protectModalUser, setProtectModalUser] = useState<User | null>(null);
+  const [isProtectingUser, setIsProtectingUser] = useState(false);
+  const [protectUserError, setProtectUserError] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('aegis_admin_token');
@@ -42,8 +46,19 @@ export default function SiteUsersPage() {
     }
 
     initCurrentUserId(token);
+    fetchSiteProtection(token);
     fetchUsers(token);
   }, [router, siteId]);
+
+  async function fetchSiteProtection(token: string) {
+    // Tenant-wide protection makes every user on this site undeletable. Load
+    // it so the Delete buttons are disabled up front rather than failing with
+    // a server error after the operator has typed a confirmation.
+    const result = await browserClient.aegisAdminGetSiteById(siteId, token);
+    if (result.success) {
+      setSiteProtected(result.data.deletion_protected === true);
+    }
+  }
 
   async function initCurrentUserId(token: string) {
     const storedUserId = localStorage.getItem('aegis_admin_user_id');
@@ -113,6 +128,36 @@ export default function SiteUsersPage() {
     }, 4000);
   }
 
+  function openProtectUserModal(user: User) {
+    setProtectModalUser(user);
+    setProtectUserError(null);
+  }
+
+  function closeProtectUserModal() {
+    if (isProtectingUser) return;
+    setProtectModalUser(null);
+    setProtectUserError(null);
+  }
+
+  async function handleProtectUser() {
+    const token = localStorage.getItem('aegis_admin_token');
+    if (!token || !protectModalUser) return;
+
+    setIsProtectingUser(true);
+    setProtectUserError(null);
+
+    const result = await browserClient.aegisAdminProtectUser(protectModalUser.uuid, token);
+
+    if (result.success) {
+      setProtectModalUser(null);
+      setIsProtectingUser(false);
+      fetchUsers(token);
+    } else {
+      setProtectUserError(result.error || t('protectUserError'));
+      setIsProtectingUser(false);
+    }
+  }
+
   function openDeleteUserModal(user: User) {
     setDeleteModalUser(user);
     setDeleteConfirmText('');
@@ -131,12 +176,16 @@ export default function SiteUsersPage() {
     if (!token || !deleteModalUser) return;
     if (deleteConfirmText.trim() !== deleteModalUser.email) return;
 
-    // Localized client-side backstops for the three cases the server also
-    // enforces (400 self-delete / 409 protected / 409 last-admin), so a
-    // stale-session edge shows a clean message instead of the raw English
-    // server string.
+    // Localized client-side backstops for the four cases the server also
+    // enforces (400 self-delete / 409 site-protected / 409 user-protected /
+    // 409 last-admin), so a stale-session edge shows a clean message instead
+    // of the raw English server string.
     if (currentUserId !== null && deleteModalUser.uuid === currentUserId) {
       setDeleteUserError(t('deleteUserSelfError'));
+      return;
+    }
+    if (siteProtected) {
+      setDeleteUserError(t('deleteUserSiteProtectedError'));
       return;
     }
     if (deleteModalUser.deletion_protected) {
@@ -216,7 +265,7 @@ export default function SiteUsersPage() {
   }
 
   function canDeleteUser(user: User): boolean {
-    return !user.deletion_protected && !isLastSiteAdmin(user);
+    return !siteProtected && !user.deletion_protected && !isLastSiteAdmin(user);
   }
 
   return (
@@ -596,17 +645,40 @@ export default function SiteUsersPage() {
                         )}
                       </div>
                     )}
+                    {!user.deletion_protected && !siteProtected && (
+                      <button
+                        type="button"
+                        onClick={() => openProtectUserModal(user)}
+                        title={t('protectUserHint')}
+                        className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors duration-200"
+                        style={{
+                          fontFamily: 'var(--font-display)',
+                          backgroundColor: 'var(--forge-steel)',
+                          border: '1px solid var(--forge-iron)',
+                          color: 'var(--forge-silver)',
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--info)'; e.currentTarget.style.color = 'var(--info)'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--forge-iron)'; e.currentTarget.style.color = 'var(--forge-silver)'; }}
+                      >
+                        <svg className="w-3.5 h-3.5" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                        </svg>
+                        {t('protectUser')}
+                      </button>
+                    )}
                     {user.uuid !== currentUserId && (
                       <button
                         type="button"
                         onClick={() => openDeleteUserModal(user)}
                         disabled={!canDeleteUser(user)}
                         title={
-                          user.deletion_protected
-                            ? t('deleteUserProtectedError')
-                            : isLastSiteAdmin(user)
-                              ? t('deleteUserLastAdminError')
-                              : undefined
+                          siteProtected
+                            ? t('deleteUserSiteProtectedError')
+                            : user.deletion_protected
+                              ? t('deleteUserProtectedError')
+                              : isLastSiteAdmin(user)
+                                ? t('deleteUserLastAdminError')
+                                : undefined
                         }
                         className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
                         style={{
@@ -652,6 +724,61 @@ export default function SiteUsersPage() {
                  style={{ borderColor: 'var(--ember-glow)', opacity: 0.5 }} />
           </div>
         </div>
+
+        {/* Enable per-user deletion protection (one-way from this console) */}
+        {protectModalUser && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+               style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(4px)' }}
+               onClick={closeProtectUserModal}>
+            <div className="w-full max-w-lg rounded-xl overflow-hidden"
+                 style={{ backgroundColor: 'var(--forge-charcoal)', border: '1px solid var(--info)' }}
+                 onClick={(e) => e.stopPropagation()}>
+              <div className="p-8">
+                <h3 className="text-xl font-semibold tracking-wide mb-4"
+                    style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-light)' }}>
+                  {t('protectUserModalTitle', { email: protectModalUser.email })}
+                </h3>
+                <p className="text-sm mb-6" style={{ color: 'var(--forge-silver)' }}>
+                  {t('protectUserModalWarning')}
+                </p>
+                {protectUserError && (
+                  <p className="text-xs mb-3" style={{ color: 'var(--error)' }}>{protectUserError}</p>
+                )}
+                <div className="flex items-center justify-end gap-3">
+                  <button
+                    type="button"
+                    autoFocus
+                    onClick={closeProtectUserModal}
+                    disabled={isProtectingUser}
+                    className="px-6 py-2.5 text-sm uppercase tracking-wider rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      color: 'var(--forge-silver)',
+                      backgroundColor: 'var(--forge-steel)',
+                      border: '1px solid var(--forge-iron)',
+                    }}
+                  >
+                    {t('cancel')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleProtectUser}
+                    disabled={isProtectingUser}
+                    className="px-6 py-2.5 text-sm font-semibold uppercase tracking-wider rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      color: 'var(--forge-black)',
+                      backgroundColor: 'var(--info)',
+                      border: '1px solid var(--info)',
+                    }}
+                  >
+                    {isProtectingUser ? t('protectUserPending') : t('protectUserConfirm')}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Delete user confirmation modal (type-the-email to confirm) */}
         {deleteModalUser && (

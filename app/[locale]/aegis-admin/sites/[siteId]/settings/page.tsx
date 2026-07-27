@@ -48,6 +48,10 @@ export default function EditSitePage() {
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
+  const [showProtectModal, setShowProtectModal] = useState(false);
+  const [isProtecting, setIsProtecting] = useState(false);
+  const [protectionError, setProtectionError] = useState<string | null>(null);
+
   useEffect(() => {
     const token = localStorage.getItem('aegis_admin_token');
 
@@ -236,6 +240,29 @@ export default function EditSitePage() {
     } catch {
       // Clipboard rejected (rare — focus/permission). Absence of checkmark is the signal.
     }
+  }
+
+  async function handleEnableProtection() {
+    const token = localStorage.getItem('aegis_admin_token');
+    if (!token) return;
+
+    setIsProtecting(true);
+    setProtectionError(null);
+
+    const result = await browserClient.aegisAdminUpdateSite(
+      siteId,
+      { deletion_protected: true },
+      token
+    );
+
+    if (result.success) {
+      setOriginalSite(result.data);
+      setShowProtectModal(false);
+    } else {
+      setProtectionError(result.error || t('siteProtectionError'));
+    }
+
+    setIsProtecting(false);
   }
 
   function openDeleteModal() {
@@ -926,6 +953,49 @@ export default function EditSitePage() {
               </span>
               <div className="flex-1 h-px" style={{ backgroundColor: 'rgba(239, 68, 68, 0.3)' }} />
             </div>
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8 pb-8"
+                 style={{ borderBottom: '1px solid rgba(239, 68, 68, 0.3)' }}>
+              <div className="max-w-xl">
+                <p className="text-sm mb-1" style={{ color: 'var(--forge-silver)' }}>
+                  {originalSite?.deletion_protected
+                    ? t('siteProtectionOnDescription')
+                    : t('siteProtectionOffDescription')}
+                </p>
+                {protectionError && (
+                  <p className="text-xs mt-2" style={{ color: 'var(--error)' }}>{protectionError}</p>
+                )}
+              </div>
+              {originalSite?.deletion_protected ? (
+                <span className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold uppercase tracking-wider rounded-lg"
+                      style={{
+                        fontFamily: 'var(--font-display)',
+                        color: 'var(--info)',
+                        backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                        border: '1px solid var(--info)',
+                      }}>
+                  <svg className="w-4 h-4" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                  </svg>
+                  {t('siteProtectionOn')}
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShowProtectModal(true)}
+                  className="shrink-0 px-6 py-2.5 text-sm font-semibold uppercase tracking-wider rounded-lg transition-all duration-200"
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    color: 'var(--info)',
+                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                    border: '1px solid var(--info)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--info)'; e.currentTarget.style.color = 'var(--forge-black)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(56, 189, 248, 0.1)'; e.currentTarget.style.color = 'var(--info)'; }}
+                >
+                  {t('siteProtectionEnable')}
+                </button>
+              )}
+            </div>
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <p className="text-sm max-w-xl" style={{ color: 'var(--forge-silver)' }}>
                 {t('deleteSiteDescription')}
@@ -948,6 +1018,61 @@ export default function EditSitePage() {
             </div>
           </div>
         </div>
+
+        {/* Enable tenant-wide deletion protection (one-way from this console) */}
+        {showProtectModal && originalSite && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+               style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(4px)' }}
+               onClick={() => { if (!isProtecting) setShowProtectModal(false); }}>
+            <div className="w-full max-w-lg rounded-xl overflow-hidden"
+                 style={{ backgroundColor: 'var(--forge-charcoal)', border: '1px solid var(--info)' }}
+                 onClick={(e) => e.stopPropagation()}>
+              <div className="p-8">
+                <h3 className="text-xl font-semibold tracking-wide mb-4"
+                    style={{ fontFamily: 'var(--font-display)', color: 'var(--forge-light)' }}>
+                  {t('siteProtectionModalTitle', { name: originalSite.name })}
+                </h3>
+                <p className="text-sm mb-6" style={{ color: 'var(--forge-silver)' }}>
+                  {t('siteProtectionModalWarning')}
+                </p>
+                {protectionError && (
+                  <p className="text-xs mb-3" style={{ color: 'var(--error)' }}>{protectionError}</p>
+                )}
+                <div className="flex items-center justify-end gap-3">
+                  <button
+                    type="button"
+                    autoFocus
+                    onClick={() => setShowProtectModal(false)}
+                    disabled={isProtecting}
+                    className="px-6 py-2.5 text-sm uppercase tracking-wider rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      color: 'var(--forge-silver)',
+                      backgroundColor: 'var(--forge-steel)',
+                      border: '1px solid var(--forge-iron)',
+                    }}
+                  >
+                    {t('cancel')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleEnableProtection}
+                    disabled={isProtecting}
+                    className="px-6 py-2.5 text-sm font-semibold uppercase tracking-wider rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      color: 'var(--forge-black)',
+                      backgroundColor: 'var(--info)',
+                      border: '1px solid var(--info)',
+                    }}
+                  >
+                    {isProtecting ? t('siteProtectionPending') : t('siteProtectionConfirm')}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Delete confirmation modal */}
         {showDeleteModal && originalSite && (

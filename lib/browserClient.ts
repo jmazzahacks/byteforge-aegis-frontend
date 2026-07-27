@@ -260,6 +260,24 @@ export const browserClient = {
       },
     });
   },
+
+  /**
+   * Enable deletion protection on a single user.
+   *
+   * Takes no boolean: the console can only ever turn protection ON, so the
+   * dangerous direction is not representable here. Clearing protection is an
+   * explicit master-key API call made outside this app.
+   */
+  async aegisAdminProtectUser(userId: string, authToken: string): Promise<ApiResponse<User>> {
+    return request<User>(`/api/frontend/aegis-admin/users/${userId}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ deletion_protected: true }),
+    });
+  },
 };
 
 export type { Site, User, LoginResponse, ApiResponse, CreateSiteRequest, UpdateSiteRequest };
