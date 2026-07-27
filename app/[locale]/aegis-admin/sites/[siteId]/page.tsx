@@ -131,15 +131,19 @@ export default function SiteUsersPage() {
     if (!token || !deleteModalUser) return;
     if (deleteConfirmText.trim() !== deleteModalUser.email) return;
 
-    // Localized client-side backstops for the two cases the server also
-    // enforces (400 self-delete / 409 last-admin), so a stale-session edge
-    // shows a clean message instead of the raw English server string.
+    // Localized client-side backstops for the three cases the server also
+    // enforces (400 self-delete / 409 protected / 409 last-admin), so a
+    // stale-session edge shows a clean message instead of the raw English
+    // server string.
     if (currentUserId !== null && deleteModalUser.uuid === currentUserId) {
       setDeleteUserError(t('deleteUserSelfError'));
       return;
     }
-    const adminCount = users.filter((u) => u.role === 'admin').length;
-    if (deleteModalUser.role === 'admin' && adminCount <= 1) {
+    if (deleteModalUser.deletion_protected) {
+      setDeleteUserError(t('deleteUserProtectedError'));
+      return;
+    }
+    if (isLastSiteAdmin(deleteModalUser)) {
       setDeleteUserError(t('deleteUserLastAdminError'));
       return;
     }
@@ -203,6 +207,17 @@ export default function SiteUsersPage() {
 
   // Number of admins on this site — used to disable deleting the last one.
   const siteAdminCount = users.filter((u) => u.role === 'admin').length;
+
+  // Single source for the two client-side delete refusals, so the disabled
+  // state, the tooltip and the hover styling can never disagree. The server
+  // enforces both independently — this is presentation only.
+  function isLastSiteAdmin(user: User): boolean {
+    return user.role === 'admin' && siteAdminCount <= 1;
+  }
+
+  function canDeleteUser(user: User): boolean {
+    return !user.deletion_protected && !isLastSiteAdmin(user);
+  }
 
   return (
     <div className="min-h-screen forge-texture relative overflow-hidden"
@@ -504,6 +519,21 @@ export default function SiteUsersPage() {
                           }}>
                       {t(`roles.${user.role}`)}
                     </span>
+                    {user.deletion_protected && (
+                      <span className="inline-flex items-center gap-1.5 ml-2 px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full"
+                            title={t('deletionProtectedHint')}
+                            style={{
+                              fontFamily: 'var(--font-display)',
+                              backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                              color: 'var(--info, #38bdf8)',
+                              border: '1px solid rgba(56, 189, 248, 0.3)'
+                            }}>
+                        <svg className="w-3 h-3" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                        </svg>
+                        {t('deletionProtected')}
+                      </span>
+                    )}
                   </td>
                   <td className="px-6 py-4">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full"
@@ -570,8 +600,14 @@ export default function SiteUsersPage() {
                       <button
                         type="button"
                         onClick={() => openDeleteUserModal(user)}
-                        disabled={user.role === 'admin' && siteAdminCount <= 1}
-                        title={user.role === 'admin' && siteAdminCount <= 1 ? t('deleteUserLastAdminError') : undefined}
+                        disabled={!canDeleteUser(user)}
+                        title={
+                          user.deletion_protected
+                            ? t('deleteUserProtectedError')
+                            : isLastSiteAdmin(user)
+                              ? t('deleteUserLastAdminError')
+                              : undefined
+                        }
                         className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
                         style={{
                           fontFamily: 'var(--font-display)',
@@ -579,7 +615,7 @@ export default function SiteUsersPage() {
                           border: '1px solid var(--forge-iron)',
                           color: 'var(--forge-silver)',
                         }}
-                        onMouseEnter={(e) => { if (!(user.role === 'admin' && siteAdminCount <= 1)) { e.currentTarget.style.borderColor = 'var(--error)'; e.currentTarget.style.color = 'var(--error)'; } }}
+                        onMouseEnter={(e) => { if (canDeleteUser(user)) { e.currentTarget.style.borderColor = 'var(--error)'; e.currentTarget.style.color = 'var(--error)'; } }}
                         onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--forge-iron)'; e.currentTarget.style.color = 'var(--forge-silver)'; }}
                       >
                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

@@ -266,7 +266,14 @@ export default function EditSitePage() {
     if (result.success) {
       router.push('/aegis-admin/dashboard');
     } else {
-      setError(result.error || t('deleteSiteError'));
+      // The only 409 this endpoint returns is a refusal because the site has
+      // deletion-protected users; localize it rather than showing the raw
+      // English server string.
+      setError(
+        result.statusCode === 409
+          ? t('deleteSiteProtectedUsersError')
+          : result.error || t('deleteSiteError')
+      );
       setIsDeleting(false);
       setShowDeleteModal(false);
     }

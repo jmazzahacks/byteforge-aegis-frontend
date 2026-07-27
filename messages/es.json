@@ -207,6 +207,7 @@
     "deletingSite": "Eliminando...",
     "deleteSiteCancel": "Cancelar",
     "deleteSiteError": "Error al eliminar el sitio.",
+    "deleteSiteProtectedUsersError": "Este sitio tiene usuarios protegidos contra eliminacion. Desactiva su proteccion mediante la API de administracion antes de eliminar el sitio.",
     "deleteUser": "Eliminar",
     "deleteUserModalTitle": "¿Eliminar {email}?",
     "deleteUserModalWarning": "Esto elimina permanentemente al usuario y todos sus tokens y datos. Esta accion no se puede deshacer.",
@@ -218,6 +219,9 @@
     "deleteUserError": "Error al eliminar el usuario.",
     "deleteUserSelfError": "No puedes eliminar la cuenta con la que has iniciado sesion.",
     "deleteUserLastAdminError": "No puedes eliminar al ultimo administrador de un sitio.",
+    "deleteUserProtectedError": "Este usuario esta protegido contra eliminacion. La proteccion debe desactivarse mediante la API de administracion antes de eliminar esta cuenta.",
+    "deletionProtected": "Protegido",
+    "deletionProtectedHint": "Protegido contra eliminacion: hay registros externos que dependen de esta identidad.",
     "siteFormLabels": {
       "name": "Nombre del Sitio",
       "domain": "Dominio",
