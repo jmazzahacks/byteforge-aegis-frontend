@@ -81,7 +81,7 @@ export async function PATCH(
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
-        { error: result.error },
+        { error: result.error, code: result.code },
         { status: result.statusCode || 500 }
       );
     }
@@ -130,7 +130,13 @@ export async function DELETE(
       userId,
     });
     return NextResponse.json(
-      { error: 'You cannot delete the account you are logged in as' },
+      {
+        error: 'You cannot delete the account you are logged in as',
+        // Coded like the backend's refusals so the console can localize it.
+        // Reachable when the client-side pre-check is skipped because
+        // currentUserId failed to resolve.
+        code: 'self_delete_forbidden',
+      },
       { status: 400 }
     );
   }
@@ -144,7 +150,7 @@ export async function DELETE(
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
-        { error: result.error },
+        { error: result.error, code: result.code },
         { status: result.statusCode || 500 }
       );
     }

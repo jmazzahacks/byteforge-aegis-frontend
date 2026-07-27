@@ -21,7 +21,7 @@ export async function GET() {
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
-        { error: result.error },
+        { error: result.error, code: result.code },
         { status: result.statusCode || 404 }
       );
     }

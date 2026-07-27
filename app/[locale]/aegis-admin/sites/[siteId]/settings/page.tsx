@@ -293,14 +293,15 @@ export default function EditSitePage() {
     if (result.success) {
       router.push('/aegis-admin/dashboard');
     } else {
-      // The only 409 this endpoint returns is a refusal because the site has
-      // deletion-protected users; localize it rather than showing the raw
-      // English server string.
-      setError(
-        result.statusCode === 409
-          ? t('deleteSiteProtectedUsersError')
-          : result.error || t('deleteSiteError')
-      );
+      // Localize the refusal by its machine-readable code rather than showing
+      // the raw English server string. Two distinct 409s: the site itself is
+      // protected, or it holds protected users.
+      const byCode: Record<string, string> = {
+        site_deletion_protected: t('deleteSiteProtectedError'),
+        site_has_protected_users: t('deleteSiteProtectedUsersError'),
+      };
+      const localized = result.code ? byCode[result.code] : undefined;
+      setError(localized || result.error || t('deleteSiteError'));
       setIsDeleting(false);
       setShowDeleteModal(false);
     }
@@ -1003,7 +1004,9 @@ export default function EditSitePage() {
               <button
                 type="button"
                 onClick={openDeleteModal}
-                className="shrink-0 px-6 py-2.5 text-sm font-semibold uppercase tracking-wider rounded-lg transition-all duration-200"
+                disabled={originalSite?.deletion_protected === true}
+                title={originalSite?.deletion_protected ? t('deleteSiteProtectedError') : undefined}
+                className="shrink-0 px-6 py-2.5 text-sm font-semibold uppercase tracking-wider rounded-lg transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
                 style={{
                   fontFamily: 'var(--font-display)',
                   color: 'var(--error)',

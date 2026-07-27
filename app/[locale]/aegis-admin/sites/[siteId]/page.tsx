@@ -53,10 +53,12 @@ export default function SiteUsersPage() {
   async function fetchSiteProtection(token: string) {
     // Tenant-wide protection makes every user on this site undeletable. Load
     // it so the Delete buttons are disabled up front rather than failing with
-    // a server error after the operator has typed a confirmation.
-    const result = await browserClient.aegisAdminGetSiteById(siteId, token);
+    // a server error after the operator has typed a confirmation. Uses the
+    // protection-only endpoint so this page never receives the site's
+    // tenant_api_key / mailgun_api_key / webhook_secret.
+    const result = await browserClient.aegisAdminGetSiteProtection(siteId, token);
     if (result.success) {
-      setSiteProtected(result.data.deletion_protected === true);
+      setSiteProtected(result.data.deletion_protected);
     }
   }
 
@@ -77,8 +79,13 @@ export default function SiteUsersPage() {
     }
   }
 
-  async function fetchUsers(token: string) {
-    setIsLoading(true);
+  async function fetchUsers(token: string, quiet: boolean = false) {
+    // quiet: refresh in the background without flipping isLoading, which
+    // would swap the whole page for the spinner and unmount whatever modal
+    // the operator is reading.
+    if (!quiet) {
+      setIsLoading(true);
+    }
     setError(null);
 
     const result = await browserClient.aegisAdminListUsersBySite(siteId, token);
@@ -208,8 +215,25 @@ export default function SiteUsersPage() {
       setIsDeletingUser(false);
       fetchUsers(token);
     } else {
-      setDeleteUserError(result.error || t('deleteUserError'));
+      // Prefer the machine-readable code: the pre-checks above run against
+      // the loaded list, so a protection set by another operator since load
+      // only surfaces here. Falling back to result.error would show the raw
+      // English server string in a non-English console.
+      const byCode: Record<string, string> = {
+        site_deletion_protected: t('deleteUserSiteProtectedError'),
+        user_deletion_protected: t('deleteUserProtectedError'),
+        last_site_admin: t('deleteUserLastAdminError'),
+        self_delete_forbidden: t('deleteUserSelfError'),
+      };
+      const localized = result.code ? byCode[result.code] : undefined;
+      setDeleteUserError(localized || result.error || t('deleteUserError'));
       setIsDeletingUser(false);
+      // A refusal means our view of the world is stale — refresh it so the
+      // buttons reflect reality.
+      if (result.statusCode === 409) {
+        fetchSiteProtection(token);
+        fetchUsers(token, true);
+      }
     }
   }
 

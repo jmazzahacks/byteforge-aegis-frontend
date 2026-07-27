@@ -208,6 +208,7 @@
     "deleteSiteCancel": "Cancelar",
     "deleteSiteError": "Error al eliminar el sitio.",
     "deleteSiteProtectedUsersError": "Este sitio tiene usuarios protegidos contra eliminacion. Desactiva su proteccion mediante la API de administracion antes de eliminar el sitio.",
+    "deleteSiteProtectedError": "Este sitio esta protegido contra eliminacion. Desactivar la proteccion requiere una llamada explicita a la API de administracion.",
     "siteProtectionOffDescription": "La proteccion contra eliminacion esta desactivada. Al activarla, ningun usuario de este sitio podra eliminarse y el sitio tampoco podra eliminarse: para inquilinos cuyas cuentas respaldan registros que no podrian recuperarse ni reasignarse.",
     "siteProtectionOnDescription": "La proteccion contra eliminacion esta ACTIVA. Ningun usuario de este sitio puede eliminarse, ni el sitio mismo. Desactivarla requiere una llamada explicita a la API de administracion y no puede hacerse desde esta consola.",
     "siteProtectionEnable": "Activar proteccion",

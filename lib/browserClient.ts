@@ -30,6 +30,9 @@ async function request<T>(url: string, options: RequestInit = {}): Promise<ApiRe
       return {
         success: false,
         error: data.error || 'Unknown error',
+        // Machine-readable reason, when the API supplied one. Switch on this
+        // rather than the English `error` string.
+        code: typeof data.code === 'string' ? data.code : undefined,
         statusCode: response.status,
       };
     }
@@ -178,6 +181,18 @@ export const browserClient = {
     return request<Site>('/api/frontend/aegis-admin/sites', {
       method: 'POST',
       body: JSON.stringify(siteData),
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+      },
+    });
+  },
+
+  /**
+   * Whether a site is deletion-protected, without pulling the site's secrets
+   * into the browser. Use this when only the protection state is needed.
+   */
+  async aegisAdminGetSiteProtection(siteId: string, authToken: string): Promise<ApiResponse<{ deletion_protected: boolean }>> {
+    return request<{ deletion_protected: boolean }>(`/api/frontend/aegis-admin/sites/${siteId}/protection`, {
       headers: {
         'Authorization': `Bearer ${authToken}`,
       },

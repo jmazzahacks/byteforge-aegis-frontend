@@ -41,7 +41,7 @@ export async function GET(
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
-        { error: result.error },
+        { error: result.error, code: result.code },
         { status: result.statusCode || 500 }
       );
     }
@@ -116,7 +116,7 @@ export async function PUT(
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
-        { error: result.error },
+        { error: result.error, code: result.code },
         { status: result.statusCode || 500 }
       );
     }
@@ -164,7 +164,7 @@ export async function DELETE(
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
-        { error: result.error },
+        { error: result.error, code: result.code },
         { status: result.statusCode || 500 }
       );
     }

@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(result.data);
     } else {
       return NextResponse.json(
-        { error: result.error },
+        { error: result.error, code: result.code },
         { status: result.statusCode || 500 }
       );
     }
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(result.data, { status: 201 });
     } else {
       return NextResponse.json(
-        { error: result.error },
+        { error: result.error, code: result.code },
         { status: result.statusCode || 500 }
       );
     }

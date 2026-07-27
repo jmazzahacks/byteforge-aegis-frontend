@@ -208,6 +208,7 @@
     "deleteSiteCancel": "Cancel",
     "deleteSiteError": "Failed to delete site.",
     "deleteSiteProtectedUsersError": "This site has users protected from deletion. Clear their deletion protection via the admin API before deleting the site.",
+    "deleteSiteProtectedError": "This site is protected from deletion. Clearing protection requires an explicit admin API call.",
     "siteProtectionOffDescription": "Deletion protection is off. When enabled, no user on this site can be deleted and the site itself cannot be deleted — for tenants whose accounts anchor records that could not be recovered or reattributed.",
     "siteProtectionOnDescription": "Deletion protection is ON. No user on this site can be deleted, and the site itself cannot be deleted. Clearing this requires an explicit admin API call and cannot be done from this console.",
     "siteProtectionEnable": "Enable Protection",
